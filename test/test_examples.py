@@ -3,7 +3,7 @@ import yamldoc
 
 class TestExampleYAMLs(unittest.TestCase):
     def test_basic(self):
-        entries = yamldoc.parse_yaml("test/yaml/basic.yaml")
+        entries = yamldoc.parse_yaml("test/yaml/basic.yaml", char = "#'", debug = False)
         known_entries = [
                 yamldoc.entries.Entry(
                     key = "meta",
@@ -20,6 +20,14 @@ class TestExampleYAMLs(unittest.TestCase):
         self.assertEqual(entries[1].key,known_entries[1].key)
         self.assertEqual(entries[1].value,known_entries[1].value)
         self.assertEqual(entries[1].meta,known_entries[1].meta)
+
+    def test_two_level(self):
+        entries = yamldoc.parse_yaml("test/yaml/two_level.yaml", char = "#'", debug = False)
+        self.assertEqual(len(entries), 2)
+        self.assertEqual(entries[0].key, "flat")
+        self.assertEqual(entries[1].entries[0].key, "entry")
+
+
 
 if __name__ == '__main__':
     unittest.main()

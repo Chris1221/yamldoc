@@ -1,1 +1,2 @@
-from .parser import parse_yaml
+from .parser import parse_yaml, main
+from .cli import cli

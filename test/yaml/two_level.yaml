@@ -1,0 +1,7 @@
+#' This is a flat entry.
+flat: "yes"
+
+#' But this is a two level thing.
+two:
+        #' These can have documentation too.
+        entry: "hi"
