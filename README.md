@@ -10,12 +10,17 @@ entry: 1
 
 #' Hierarchical entries are also supported.
 big_entry:
-
-	#' Along with documentation for sub entries.
-	sub_entry: 1
+    #' Along with documentation for sub entries.
+    sub_entry: 1
 ```
 
 Becomes:
 
-> # `entry`: `1`
+> ### `entry`: `1`
 >	Simple key-value pair.
+>
+> ## `big_entry`
+>	Hierarchical entries are also supported
+>
+> ### `sub_entry`: `1`
+>	Along with documentation for sub entries.
