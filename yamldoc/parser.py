@@ -77,6 +77,17 @@ def parse_yaml(file_path, char, debug):
 
 def main(path_to_file, char = "#'", debug = True, title = "Configuration Parameters Reference", description = "Any information about this page goes here."):
     print("# " + title + "\n\n" + description + "\n")
+
     values = parse_yaml(path_to_file, char, debug)
+    # Build the table with top level values
+    print("| Key | Value | Information |")
+    print("| :-: | :-: | :-- |") 
     for value in values:
-        print(value.to_markdown())
+        if not value.isBase:
+            print(value.to_markdown())
+
+    print("\n\n")
+
+    for value in values:
+        if value.isBase:
+            print(value.to_markdown())
