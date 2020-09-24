@@ -25,7 +25,7 @@ For additional options see
 yamldoc -h
 ```
 
-For example:
+## Examples
 
 ```yaml
 #' Simple key-value pair.
