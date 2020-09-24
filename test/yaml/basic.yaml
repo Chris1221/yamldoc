@@ -1,0 +1,8 @@
+#' Here is some meta data.
+meta: "Data"
+
+#' And here is 
+#' some more
+#' split over
+#' a couple of lines.
+fun: True
