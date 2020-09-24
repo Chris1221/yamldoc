@@ -27,23 +27,21 @@ yamldoc -h
 
 ## Examples
 
-```yaml
-#' Simple key-value pair.
-entry: 1
-
-#' Hierarchical entries are also supported.
-big_entry:
-    #' Along with documentation for sub entries.
-    sub_entry: 1
+```sh
+yamldoc test/yamltwo_level.yaml
 ```
 
-Becomes:
+Outputs:
 
-> ### `entry`: `1`
->	Simple key-value pair.
->
-> ## `big_entry`
->	Hierarchical entries are also supported
->
-> ### `sub_entry`: `1`
->	Along with documentation for sub entries.
+> # Configuration Parameters Reference
+> Any information about this page goes here.
+> | Key | Value | Information |
+> | :-: | :-: | :-- |
+> | `flat` | `"yes"` | This is a flat entry. |
+> ## `two`
+> But this is a two level thing.
+> ### Member variables:
+> | Key | Value | Information |
+> | :-: | :-: | :-- |
+> | `entry` | `"hi"` | But this is a two level thing. These can have<br />documentation too. |
+
