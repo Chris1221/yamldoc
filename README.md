@@ -1,6 +1,29 @@
 ## Documentation Engine for YAML
 
-This package converts a YAML file into markdown, formatting values and associated metadata in a `doxygen`-like way.
+This package converts a YAML file into markdown, formatting values and associated metadata in a `doxygen`-like way.  
+
+## Installation
+
+```sh
+git clone git@github.com:Chris1221/yaml.doc.git
+pip install yaml.doc/
+```
+
+This will install both the python package, and the command line interface `yamldoc`.
+
+## Usage
+
+Point the command line interface to a YAML file.
+
+```sh
+yamldoc test/yaml/basic.yaml
+```
+
+For additional options see 
+
+```sh
+yamldoc -h
+```
 
 For example:
 
