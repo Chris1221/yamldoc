@@ -75,6 +75,81 @@ def parse_yaml(file_path, char, debug):
     return things
 
 
+def key_value(line):
+    try:
+        key, value = line.rstrip().lstrip(' ').split(":")
+    except ValueError: 
+        values = line.rstrip().lstrip(' ').split(":")
+        key = values[0]
+        value = ''.join(values[1:])
+    if not value: return (key)
+    return (key, value.lstrip(" "))
+
+def count_indent(line):
+    return len(line) - len(line.lstrip(' '))
+
+def schema_parser(path_to_file, debug = True):
+    name = "base"
+
+    indent = [0, 0]
+
+    specials = {}
+    current = {}
+
+    with open(path_to_file) as schema:
+        for line in [l for l in schema.readlines() if l.rstrip()]:
+            if debug: print(line)
+            indent = [indent[1], count_indent(line)]
+            # The base level has to start with a special name
+            # because it is not named in the schema.
+            try:
+                key, value = key_value(line)
+            except ValueError:
+                key = key_value(line)
+                value = None
+
+            # Deal with top level specials.
+            if key == "$schema":
+                assert value is not None
+                specials["schema"] = value
+            
+            if key == "description":
+                assert value is not None
+                specials["description"] = value
+
+
+            if indent[1] > indent[0]:
+                if value is None:
+                    if key == "properties":
+                        current[name] = {} 
+                        indents[name] = {} 
+                        continue
+                    else:
+                        parent = name
+                        name = key
+                        continue
+
+                if key == "type":
+                    assert value is not None
+                    current[parent][name] = value
+                    indents[parent][name] = indent[1]
+                    continue
+
+            if indent[1] < indent[0]:
+                # We're just adding another value 
+                if indent[1] == indents[parent][name]:
+                    if value is None:
+                        name = key
+                        continue
+                elif indent[1] < indents[parent][name]:
+                    if value is None:
+                        name = key
+                        continue
+                
+        return current 
+
+
+
 def main(path_to_file, char = "#'", debug = True, title = "Configuration Parameters Reference", description = "Any information about this page goes here."):
     print("# " + title + "\n\n" + description + "\n")
 
