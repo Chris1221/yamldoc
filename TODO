@@ -1,7 +1,0 @@
-1. Read in a schema file for additional information on the data; i.e. what format it needs to be to be accepted. 
-2. Formatting needs to be nicer. Section headings have to be more than just the name. Could these be tables within 
-   the groupings? Have each element be an entry in a table?
-  - If so, could output each Entry as essentially | {entry.key} | {entry.value} | {entry.meta} | and then 
-    have the beginnings and ends of the tables at the beginning and end.
-  - If schema, add an extra column for type. Really this could be in the meta with a tag. Maybe better 
-    to keep it in schema though, since the purpose is to not duplicate information.

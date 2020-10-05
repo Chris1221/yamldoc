@@ -8,12 +8,21 @@ jobs:
     executor: python/default
     steps:
       - checkout
-      - python/load-cache
-      - python/install-deps
-      - python/save-cache
       - run:
-          command: ./manage.py test
-          name: Test
+          command: pip install .
+          name: Install
+      - run:
+          command: python test/test_examples.py
+          name: Test 
+      - run:
+          command: pip install pytest coverage codecov
+          name: Install test
+      - run:
+          command: coverage run -m pytest test
+          name: Run coverage test.
+      - run:
+          command: python -m codecov
+
 
 workflows:
   main:
