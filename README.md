@@ -1,6 +1,6 @@
 ## Documentation Engine for YAML
 
-[![PyPI version](https://badge.fury.io/py/yamldoc.svg)](https://badge.fury.io/py/yamldoc) [![CircleCI](https://circleci.com/gh/Chris1221/yamldoc.svg?style=svg&circle-token=114ff93a4850a6cf03289d1b7a9aaf4af351afc9)](https://app.circleci.com/pipelines/github/Chris1221/yamldoc?branch=master) [![codecov](https://codecov.io/gh/Chris1221/yamldoc/branch/master/graph/badge.svg?token=OpQhpILdh3)](https://codecov.io/gh/Chris1221/yamldoc) [!(PyPi Downloads)[https://img.shields.io/pypi/dm/yamldoc)](https://img.shields.io/pypi/dm/yamldoc)
+[![PyPI version](https://badge.fury.io/py/yamldoc.svg)](https://badge.fury.io/py/yamldoc) [![CircleCI](https://circleci.com/gh/Chris1221/yamldoc.svg?style=svg&circle-token=114ff93a4850a6cf03289d1b7a9aaf4af351afc9)](https://app.circleci.com/pipelines/github/Chris1221/yamldoc?branch=master) [![codecov](https://codecov.io/gh/Chris1221/yamldoc/branch/master/graph/badge.svg?token=OpQhpILdh3)](https://codecov.io/gh/Chris1221/yamldoc) [![PyPi Downloads](https://img.shields.io/pypi/dm/yamldoc)](https://img.shields.io/pypi/dm/yamldoc)
 
 This package converts a YAML file into markdown, formatting values and associated metadata in a `doxygen`-like way.  
 
