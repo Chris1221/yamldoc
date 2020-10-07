@@ -264,10 +264,10 @@ def main(yaml_path, char = "#'", debug = False, schema_path = None, title = "Con
         # Edit the yaml in place with type information.
         add_type_metadata(schema, yaml, debug)
 
-        if specials["_yamldoc_title"]:
+        if "_yamldoc_title" in specials:
             title = specials["_yamldoc_title"]
 
-        if specials["_yamldoc_description"]:
+        if "_yamldoc_description" in specials:
             description = specials["_yamldoc_description"]
             
 
