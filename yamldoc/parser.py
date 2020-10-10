@@ -2,7 +2,19 @@ import yamldoc.entries
 from datetime import date
 import pdb
 
+
 def parse_yaml(file_path, char = "#'", debug = False):
+    '''
+    Parse a YAML file and return a list of YAML classes. 
+
+    Arguments:
+        file_path: Path to the YAML file.
+        char: A character string used to identify yamldoc blocks.
+        debug: Print debug information
+
+    Return:
+        List of YAML blocks.
+    '''
     # YAML files have key value pairings seperated by 
     # newlines. The most straightforward kind of things to parse will be
     # keyvalue pairs preceeded by comments with the Doxygen marker #'
@@ -77,6 +89,15 @@ def parse_yaml(file_path, char = "#'", debug = False):
 
 
 def key_value(line):
+    '''
+    Extract a key value pair from a single YAML line.
+
+    Arguments:
+        line: A character string to be processed.
+
+    Returns:
+        Key value pairing; alternatively, if not value i present, just the key.
+    '''
     try:
         key, value = line.rstrip().lstrip(' ').split(":")
     except ValueError: 
@@ -87,9 +108,24 @@ def key_value(line):
     return (key, value.lstrip(" "))
 
 def count_indent(line):
+    '''
+    Count indentation level.
+
+    Arguments:
+        line: A character string to be processed.
+    '''
     return len(line) - len(line.lstrip(' '))
 
 def parse_schema(path_to_file, debug = False):
+    '''
+    Parse a schema file to identify key value pairing of 
+    values and their associated types.
+
+    Arguments:
+        path_to_file: Path to schema file.
+
+    Returns: Tuple of (schema, specials) where specials are unique YAMLDOC strings for the title and description of the desired markdown. 
+    '''
     name = "base"
 
     indent = [0, 0]
@@ -219,6 +255,18 @@ def parse_schema(path_to_file, debug = False):
         return current, specials 
 
 def add_type_metadata(schema, yaml, debug = False):
+    '''
+    Modified a list of yaml entries in place to add type information
+    from a parsed schema.
+
+    Arguments:
+        schema: List of schema representations from parse_schema.
+        yaml: List of yaml representations from parse_yaml.
+        debug: Print debug information
+    
+    Returns: 
+        Nothing.
+    '''
     # Loop over each value of the schema 
     for name, variables in schema.items():
         # Find the corresponding entry in the YAML.
@@ -254,6 +302,20 @@ def add_type_metadata(schema, yaml, debug = False):
         
 
 def main(yaml_path, char = "#'", debug = False, schema_path = None, title = "Configuration Parameters Reference", description = "Any information about this page goes here."):
+    '''
+    Takes a given YAML file and optionally an associated schema, parsing each for their key value pairings and reports the results as a markdown document.
+
+    Arguments:
+        yaml_path: Path to YAML file.
+        schema_path: Path to schema file. 
+        char: Special character to identify comments to be included in YAMLDOC documentation.
+        debug: Print debug information
+        title: Title of markdown generated.
+        description: Description given below the title in markdown.
+
+    Returns: 
+        Nothing, prints to stdout.
+    '''
     # If a schema has been specified, add the
     # type information to the rest of the 
     # variables.
