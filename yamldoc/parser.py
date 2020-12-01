@@ -40,7 +40,7 @@ def parse_yaml(file_path, char = "#'", debug = False):
                     if line.startswith(char):
                         meta = meta + line.lstrip(char).rstrip()
                     else:
-                        key, value = line.rstrip().split(":")
+                        key, value = line.rstrip().split(":", 1)
                         
                         # If there is no value, this is the beginning of a 
                         # base entry (i.e. there are subentries to follow)
@@ -69,7 +69,7 @@ def parse_yaml(file_path, char = "#'", debug = False):
                     if line.lstrip(' ').startswith(char):
                         meta = meta + line.lstrip().lstrip(char).rstrip()
                     else:
-                        key, value = line.lstrip().rstrip().split(":")
+                        key, value = line.lstrip().rstrip().split(":", 1)
                         current_entry.entries.append(yamldoc.entries.Entry(key, value.lstrip(' '), meta.lstrip()))
                         if debug: print("@\tFound an entry and deposited it in meta.")
                         meta = ""
@@ -99,9 +99,9 @@ def key_value(line):
         Key value pairing; alternatively, if not value i present, just the key.
     '''
     try:
-        key, value = line.rstrip().lstrip(' ').split(":")
+        key, value = line.rstrip().lstrip(' ').split(":", 1)
     except ValueError: 
-        values = line.rstrip().lstrip(' ').split(":")
+        values = line.rstrip().lstrip(' ').split(":", 1)
         key = values[0]
         value = ''.join(values[1:])
     if not value: return (key)

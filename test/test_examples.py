@@ -27,6 +27,11 @@ class TestYAMLs(unittest.TestCase):
         self.assertEqual(entries[0].key, "flat")
         self.assertEqual(entries[1].entries[0].key, "entry")
 
+    def test_url_parsing(self):
+        entries = yamldoc.parse_yaml("test/yaml/URLs.yaml", char = "#'", debug = False)
+        self.assertEqual(entries[0].value, "https://github.com/Chris1221/yamldoc")
+        self.assertEqual(entries[1].entries[0].value, "https://github.com/Chris1221/yamldoc")
+
 class TestSchemas(unittest.TestCase):
     def test_basic(self):
         yaml = yamldoc.parse_yaml("test/yaml/basic.yaml", debug = False)

@@ -1,0 +1,11 @@
+#' Here is some meta data.
+our_url: https://github.com/Chris1221/yamldoc
+
+#' And here is 
+#' some more
+#' split over
+#' a couple of lines.
+our_url: 
+        and_nested: https://github.com/Chris1221/yamldoc
+
+
