@@ -7,7 +7,7 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 
 setup(
    name='yamldoc',
-   version='0.1.3',
+   version='0.1.4',
    description='Documentation engine for YAML.',
    long_description=long_description,
    long_description_content_type='text/markdown',
