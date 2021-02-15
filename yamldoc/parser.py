@@ -134,6 +134,8 @@ def parse_schema(path_to_file, debug = False):
     indents = {}
     current = {}
 
+    extras = {}
+
     special_type_case = False
 
     with open(path_to_file) as schema:
@@ -193,7 +195,8 @@ def parse_schema(path_to_file, debug = False):
             if value is None:
                 if key == "properties":
                     current[name] = {} 
-                    indents[name] = {} 
+                    indents[name] = {}
+                    extras[name] = {}
                     continue
 
 
@@ -201,7 +204,7 @@ def parse_schema(path_to_file, debug = False):
             # The actual amount of indent is not
             # relevant (though it may be for 
             # parsing a valid YAML document.
-            if indent[1] > indent[0]:
+            if indent[1] >= indent[0]:
                 if value is None:
                     # If the key is properties
                     # then we are starting a new object
@@ -209,6 +212,7 @@ def parse_schema(path_to_file, debug = False):
                     if key == "properties":
                         current[name] = {} 
                         indents[name] = {} 
+                        extras[name] = {}
                         continue
                     
                     # This is a special case where
@@ -240,6 +244,19 @@ def parse_schema(path_to_file, debug = False):
                         current[parent][name] = value
                         indents[parent][name] = indent[1]
                     continue
+                elif key in ["plain_text", "enum"]:
+                    assert value is not None
+                    if name in extras[parent].keys():
+                        extras[parent][name][key] = value
+                        indents[parent][name] = indent[1]
+                    else: 
+                        extras[parent][name] = {key: value}
+                        indents[parent][name] = indent[1]
+
+
+
+
+                
 
             if indent[1] < indent[0]:
                 # We're just adding another value 
@@ -252,7 +269,7 @@ def parse_schema(path_to_file, debug = False):
                         name = key
                         continue
                 
-        return current, specials 
+        return current, specials, extras
 
 def add_type_metadata(schema, yaml, debug = False):
     '''
@@ -297,6 +314,45 @@ def add_type_metadata(schema, yaml, debug = False):
                                     entry.has_schema = True
 
             
+def add_extra_metadata(extras, yaml, debug = False):
+    '''
+    Modified a list of yaml entries in place to add extra type information
+    from a parsed schema.
+
+    Arguments:
+        schema: List of schema representations from parse_schema.
+        yaml: List of yaml representations from parse_yaml.
+        debug: Print debug information
+    
+    Returns: 
+        Nothing.
+    '''
+    # Loop over each value of the schema 
+    for name, variables in extras.items():
+        # Find the corresponding entry in the YAML.
+        
+        # Special case: if the name is base in the schema
+        # these are top level variables
+        # which need to be dealt with seperately.
+        if name == "base": 
+            # Look for top level entries
+            for var, meta in variables.items(): 
+                for value in yaml:
+                    if not value.isBase:
+                        if var == value.key:
+                            for key, v in meta.items(): 
+                                value.key = value
+        else:
+            for value in yaml:
+                if value.isBase:
+                    if name == value.name:
+                        for var, meta in variables.items():
+                            for entry in value.entries:
+                                if var == entry.key:
+                                    if debug: print(f"Setting type of {var}")
+                                    for key, v in meta.items(): 
+                                        setattr(entry, key, v)
+
 
 
         
