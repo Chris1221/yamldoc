@@ -1,22 +1,63 @@
-# Seamless auto-documentation of configuration parameters with yamldoc 
 
-## Introduction
 
-Configuration is a key part of complex workflows. Parameter values that might otherwise be passed at the command line are stored for posterity in human and machine readable formats. One format which has recently become popular for this purpose across diverse application areas is Yet Another Markup Language (YAML). 
+## Documentation Engine for YAML
 
-YAML configurations can be found in many different tool sets (web applications, CLI tools often store config in .rc files, pipelines for bioinformatics). As applications grow, the number of parameters to be included in the YAML does too. Currently, these configuration sets are mostly documented only in a haphazard way, if at all, and there is no interface between the inline documentation and required types from schema files. 
+[![PyPI version](https://badge.fury.io/py/yamldoc.svg)](https://badge.fury.io/py/yamldoc) [![CircleCI](https://circleci.com/gh/Chris1221/yamldoc.svg?style=svg&circle-token=114ff93a4850a6cf03289d1b7a9aaf4af351afc9)](https://app.circleci.com/pipelines/github/Chris1221/yamldoc?branch=master) [![codecov](https://codecov.io/gh/Chris1221/yamldoc/branch/master/graph/badge.svg?token=OpQhpILdh3)](https://codecov.io/gh/Chris1221/yamldoc) [![Downloads](https://pepy.tech/badge/yamldoc)](https://pepy.tech/project/yamldoc)
 
-Yamldoc solves this problem by directly interfacing with autodocumentation engines in readthedocs, sphinx, etc. to create elegant tables that summarise parameters, their types, and their default values. The software is light, dependency-free, and easily integrates with automated building engines like Github Actions, CircleCI, and Travis CI.
+This package converts a YAML file into markdown, formatting values and associated metadata in a `doxygen`-like way. To get started, check out the [documentation](http://chrisbcole.me/yamldoc/) and [tutorials](http://chrisbcole.me/yamldoc/tutorial/).
 
-## Philosophy and Implementation of Configuration Documentation 
+## Installation
 
-* Give an example of a badly documented configuration file and then go onto how we fix this
-* How we interface with schemas 
+```sh
+pip install yamldoc
+```
 
-## Application to Snakemake workflows
+This will install the python package, which contains a command line interface `yamldoc`. To see usage instructions, invoke the `--help` flag:
 
-* explain what snakemake is and how configuration files are recommended 
+```sh
+yamldoc -h
+```
 
-## Interfacing with Sphinx, Readthedocs, and Continuous Deployment services 
 
-* How you can plug this into an auto doc frame work plus an example
+## Philosophy
+
+Many programs and utilities use YAML ([YAML Ain't Markup Language](https://en.wikipedia.org/wiki/YAML)) as a human and machine readable interface to configuration parameters and other values. More broadly, many kinds of data can be stored in YAML with minimal effort from the user. However, often a configuration file accumulates a highly specific set of configurations marked up with vague, difficult to interpret comments. It is the goal of this package to provide an easy interface for developers to document data in their YAML files as well as the expected types from a [JSON YAML schema validator](https://json-schema-everywhere.github.io/yaml). Doing so will allow a transparent interface between the developer's expectations and the user's configurations. 
+
+### Specific Application to Snakemake
+
+This package was designed specifically to document the possible configuration options of a [Snakemake](https://snakemake.readthedocs.io/en/stable/) pipeline. In this application, the developer of the pipeline encodes many different specific options that the user may configure at run time, but these are often poorly documented. When they are, it is easy for the documentation to fall out of sync with the actual options in the configuration file. `yamldoc` automatically documents all configuration paramters as well as taking types from a schema file. The package will also read any comments that are present above each paramter and insert them into a parameter table for easy reference.
+
+For more details on using YAML to configure Snakemake pipelines, see [here](https://snakemake.readthedocs.io/en/stable/snakefiles/configuration.html).
+
+## Example Files
+
+For a minimal example of `yamldoc`, see the files in `/test/yaml` and `/test/schema`.
+
+## Usage
+
+For a basic report, point the command line interface to a YAML file.
+
+```sh
+yamldoc test/yaml/basic.yaml
+```
+
+You can also include type information from a schema file.
+
+```sh
+yamldoc test/yaml/basic.yaml -s test/schema/basic.schema
+```
+
+## Other Options
+
+`yamldoc` defaults to using `#'` as a special marker, but you can choose this character yourself if you wish. Just set it on the command line at parse-time:
+
+```sh
+yamldoc test/yaml/basic.yaml -c "YOURCHAR"
+```
+
+`yamldoc` also includes support for certain special declarations in the schema file. Right now these include:
+
+- `_yamldoc_title`: This specifies the overall title of the markdown page generated.
+- `_yamldoc_description`: A description to follow the title. 
+
+These are picked out of the schema file and reported. 
