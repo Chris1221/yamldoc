@@ -1,3 +1,9 @@
+### 0.1.5
+
+#### March 25 2022
+
+Fixed a weird untested bug for reading from meta-data file.
+
 ### 0.1.4
 #### February 15 2020
 

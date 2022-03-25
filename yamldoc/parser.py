@@ -376,7 +376,7 @@ def main(yaml_path, char = "#'", debug = False, schema_path = None, title = "Con
     # type information to the rest of the 
     # variables.
     if schema_path is not None:
-        schema, specials = parse_schema(schema_path, debug)
+        schema, specials, extras = parse_schema(schema_path, debug)
         yaml = parse_yaml(yaml_path, char, debug)
 
         # Edit the yaml in place with type information.
