@@ -140,9 +140,7 @@ def parse_schema(path_to_file, debug = False):
 
     with open(path_to_file) as schema:
         for line in [l for l in schema.readlines() if l.rstrip()]:
-            if debug: print(line)
             indent = [indent[1], count_indent(line)]
-
             
             # The base level has to start with a special name
             # because it is not named in the schema.
@@ -151,6 +149,10 @@ def parse_schema(path_to_file, debug = False):
             except ValueError:
                 key = key_value(line)
                 value = None
+
+            
+            #if key == "var2": breakpoint()
+
 
             # This is awkwardly placed but we have to deal
             # with a special case where lines 
@@ -164,32 +166,18 @@ def parse_schema(path_to_file, debug = False):
                 # the list of types has finished.
                 if indent[1] < indent[0]:
                     special_type_case = False
-                    continue
-                if line.lstrip(" ").startswith("-"):
+                elif line.lstrip(" ").startswith("-"):
                     value = line.lstrip(" ").lstrip("- ").rstrip()
                     current[parent][name].append(value)
+                    indents[parent][name].append(indent[1])
                     continue
                 else:
                     raise TypeError("You must specify a value for type.")
 
-            # < Deal with top level specials.
-            if key == "$schema":
+            SPECIAL_KEYS = ["$schema", "_yamldoc_title", "_yamldoc_description", "description"]
+            if key in SPECIAL_KEYS:
                 assert value is not None
-                specials["schema"] = value
-
-            if key == "_yamldoc_title": 
-                assert value is not None
-                specials[key] = value
-
-            if key == "_yamldoc_description": 
-                assert value is not None
-                specials[key] = value
-
-            
-            if key == "description":
-                assert value is not None
-                specials["description"] = value
-            # />
+                specials[key.replace("$", "")] = value
 
             # Top level properties option
             if value is None:
@@ -253,18 +241,22 @@ def parse_schema(path_to_file, debug = False):
                         extras[parent][name] = {key: value}
                         indents[parent][name] = indent[1]
 
-
-
-
-                
-
             if indent[1] < indent[0]:
                 # We're just adding another value 
-                if indent[1] == indents[parent][name]:
+                
+                # Here we account for the case where 
+                # the parent case has multiple indentation 
+                # levels.
+                if isinstance(indents[parent][name], list):
+                    parent_indentation = indents[parent][name][-1]
+                else:
+                    parent_indentation = indents[parent][name]
+
+                if indent[1] == parent_indentation:
                     if value is None:
                         name = key
                         continue
-                elif indent[1] < indents[parent][name]:
+                elif indent[1] < parent_indentation:
                     if value is None:
                         name = key
                         continue

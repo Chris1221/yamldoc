@@ -48,6 +48,12 @@ class TestSchemas(unittest.TestCase):
         self.assertEqual(yaml[1].entries[0].key, "entry")
         self.assertEqual(len(yaml[1].entries[0].type), 2)
 
+    def test_complex(self):
+        schema, specials, extra = yamldoc.parser.parse_schema("test/schema/complex.schema", debug = False)
+        self.assertTrue(schema["general"]["var1"] == ["array", "string"])
+        self.assertTrue(schema["general"]["var2"] == "string")
+        self.assertTrue(schema["general"]["var3"] == "string")
+
 
 if __name__ == '__main__':
     unittest.main()
