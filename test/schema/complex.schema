@@ -1,0 +1,17 @@
+$schema: "http://json-schema.org/draft-04/schema#"
+
+type: object
+
+properties:
+    version:
+        type: string
+    general:
+        properties:
+            var1:
+                type:
+                    - array
+                    - string
+            var2:
+                type: string
+            var3:
+                type: string
