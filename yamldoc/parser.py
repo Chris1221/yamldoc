@@ -26,6 +26,42 @@ def parse_yaml(file_path, char = "#'", debug = False):
     with open(file_path) as yaml:
         for line in [l for l in yaml.readlines() if l.rstrip()]:
             if debug: print(line.rstrip())
+
+            if current_entry is not None:
+                if current_entry.isBase:
+
+                    # If we're back at 0 indentation, the
+                    # block is done and we need to quit.
+                    if len(line) - len(line.lstrip(' ')) == 0:
+                        # Is current_entry a list or a meta-entry?
+                        if current_entry.is_list():
+                            if debug: print("@\tAdding list entry to things.")
+                            things.append(current_entry.to_list_entry())
+                        else:
+                            if debug: print("@\tAdding meta entry to things.")
+                            things.append(current_entry)
+                        current_entry = None
+                        
+
+                    # If not, continue parsing the sub entries.
+                    # 
+                    if current_entry is not None:
+                        if line.lstrip(' ').startswith(char):
+                            meta = meta + line.lstrip().lstrip(char).rstrip()
+                        else:
+                            try:
+                                key, value = line.lstrip().rstrip().split(":", 1)
+                                current_entry.entries.append(yamldoc.entries.Entry(key, value.lstrip(' '), meta.lstrip()))
+                                if debug: print("@\tFound an entry and deposited it in meta.")
+                                meta = ""
+                            except ValueError:
+                                # If there's only one value, it's a list.
+                                # in this case, we add ths value to the 
+                                # current entry and continue.
+                                if debug: print("@\tFound a list entry.")
+                                current_entry.entries.append(yamldoc.entries.ListElement(line.lstrip().lstrip("-").lstrip().rstrip()))
+
+
             
             # Either we haven't started yet
             # or we've just flushed the entry.
@@ -58,39 +94,7 @@ def parse_yaml(file_path, char = "#'", debug = False):
                             if debug: print("@\tFound an entry.")
                             meta = ""
 
-            if current_entry is not None:
-                if current_entry.isBase:
-
-                    # If we're back at 0 indentation, the
-                    # block is done and we need to quit.
-                    if len(line) - len(line.lstrip(' ')) == 0:
-                        # Is current_entry a list or a meta-entry?
-                        if current_entry.is_list():
-                            if debug: print("@\tAdding list entry to things.")
-                            things.append(current_entry.to_list_entry())
-                        else:
-                            if debug: print("@\tAdding meta entry to things.")
-                            things.append(current_entry)
-                        current_entry = None
-                        continue
-
-                    # If not, continue parsing the sub entries.
-                    if line.lstrip(' ').startswith(char):
-                        meta = meta + line.lstrip().lstrip(char).rstrip()
-                    else:
-                        try:
-                            key, value = line.lstrip().rstrip().split(":", 1)
-                            current_entry.entries.append(yamldoc.entries.Entry(key, value.lstrip(' '), meta.lstrip()))
-                            if debug: print("@\tFound an entry and deposited it in meta.")
-                            meta = ""
-                        except ValueError:
-                            # If there's only one value, it's a list.
-                            # in this case, we add ths value to the 
-                            # current entry and continue.
-                            if debug: print("@\tFound a list entry.")
-                            current_entry.entries.append(yamldoc.entries.ListElement(line.lstrip().lstrip("-").lstrip().rstrip()))
-
-
+            
 
         # The file might run out
         # before the final meta
