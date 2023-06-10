@@ -66,8 +66,10 @@ def parse_yaml(file_path, char = "#'", debug = False):
                     if len(line) - len(line.lstrip(' ')) == 0:
                         # Is current_entry a list or a meta-entry?
                         if current_entry.is_list():
+                            if debug: print("@\tAdding list entry to things.")
                             things.append(current_entry.to_list_entry())
                         else:
+                            if debug: print("@\tAdding meta entry to things.")
                             things.append(current_entry)
                         current_entry = None
                         continue
@@ -85,7 +87,8 @@ def parse_yaml(file_path, char = "#'", debug = False):
                             # If there's only one value, it's a list.
                             # in this case, we add ths value to the 
                             # current entry and continue.
-                            current_entry.entries.append(yamldoc.entries.ListElement(line.lstrip().rstrip()))
+                            if debug: print("@\tFound a list entry.")
+                            current_entry.entries.append(yamldoc.entries.ListElement(line.lstrip().lstrip("-").lstrip().rstrip()))
 
 
 
@@ -169,9 +172,6 @@ def parse_schema(path_to_file, debug = False):
                 value = None
 
             
-            #if key == "var2": breakpoint()
-
-
             # This is awkwardly placed but we have to deal
             # with a special case where lines 
             # start with a dash, and indicate that

@@ -31,6 +31,12 @@ class TestYAMLs(unittest.TestCase):
         entries = yamldoc.parse_yaml("test/yaml/URLs.yaml", char = "#'", debug = False)
         self.assertEqual(entries[0].value, "https://github.com/Chris1221/yamldoc")
         self.assertEqual(entries[1].entries[0].value, "https://github.com/Chris1221/yamldoc")
+    
+    def test_list_parsing(self):
+        entries = yamldoc.parse_yaml("test/yaml/lists.yaml", char = "#'", debug = False)
+        self.assertEqual(entries[0].value, ["1", "2", "3"])
+        self.assertTrue(entries[0].meta.strip() == "List metadata")
+
 
 class TestSchemas(unittest.TestCase):
     def test_basic(self):
@@ -47,6 +53,14 @@ class TestSchemas(unittest.TestCase):
         self.assertEqual(yaml[0].type, "string")
         self.assertEqual(yaml[1].entries[0].key, "entry")
         self.assertEqual(len(yaml[1].entries[0].type), 2)
+
+    def test_lists(self):
+        yaml = yamldoc.parse_yaml("test/yaml/lists.yaml", debug = False)
+        schema, specials, extra = yamldoc.parser.parse_schema("test/schema/lists.schema", debug = False)
+        yamldoc.parser.add_type_metadata(schema, yaml)
+        self.assertEqual(yaml[0].value, ["1", "2", "3"])
+        self.assertTrue(yaml[0].meta.strip() == "List metadata")
+        self.assertTrue(yaml[0].type == "array")
 
     def test_complex(self):
         schema, specials, extra = yamldoc.parser.parse_schema("test/schema/complex.schema", debug = False)
