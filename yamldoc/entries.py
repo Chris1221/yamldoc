@@ -38,7 +38,7 @@ class MetaEntry:
             schema: Print with four columns instead of three.
         """
         if schema:
-            output = f"## `{self.name}`\n\n{self.meta}\n\n"
+            output = f"## `{self.name}`\n\n{self.meta.lstrip()}\n\n"
             output += "### Member variables:\n\n"
 
             output += "| Key | Value | Type | Information |\n"
@@ -46,11 +46,10 @@ class MetaEntry:
 
             for entry in self.entries:
                 output += entry.to_markdown(schema) + "\n"
-            output += "\n\n"
             return output
 
         else:
-            output = f"## `{self.name}`\n\n{self.meta}\n\n"
+            output = f"## `{self.name}`\n\n{self.meta.lstrip()}\n\n"
             output += "### Member variables:\n\n"
 
             output += "| Key | Value | Information |\n"
@@ -58,8 +57,6 @@ class MetaEntry:
 
             for entry in self.entries:
                 output += entry.to_markdown()
-
-            output += "\n\n"
 
             return output
 

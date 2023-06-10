@@ -448,13 +448,18 @@ def main(
         print("# " + title + "\n\n" + description + "\n")
 
         # Build the table with top level yaml
-        print("| Key | Value | Type | Information |")
-        print("| :-: | :-: | :-: | :-- |")
+
+        # We only need to print this if there's no 
+        # top level variable first 
+        if not yaml[0].isBase:
+            print("| Key | Value | Type | Information |")
+            print("| :-: | :-: | :-: | :-- |")
+
         for value in yaml:
             if not value.isBase:
                 print(value.to_markdown(schema=True))
 
-        print("\n\n")
+        # print("\n\n")
 
         for value in yaml:
             if value.isBase:
@@ -471,13 +476,16 @@ def main(
 
         yaml = parse_yaml(yaml_path, char, debug)
         # Build the table with top level yaml
-        print("| Key | Value | Information |")
-        print("| :-: | :-: | :-- |")
+
+        # We only need to print this if there's no
+        # top level variable first
+        if not yaml[0].isBase:
+            print("| Key | Value | Information |")
+            print("| :-: | :-: | :-- |")
+        
         for value in yaml:
             if not value.isBase:
                 print(value.to_markdown())
-
-        print("\n\n")
 
         for value in yaml:
             if value.isBase:

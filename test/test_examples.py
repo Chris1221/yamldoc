@@ -79,12 +79,12 @@ class TestMarkdown(unittest.TestCase):
             footer=False,
         )
         output = new_stdout.getvalue()
-        output = output.replace("<br />", "")
-        output = output.replace("\n", "")
+        output = output.replace("<br />", " ")
+        output = output.replace("\n", " ")
         sys.stdout = old_stdout
-        proper_markdown = """# Configuration Parameters Reference\n\nAny information about this page goes here.\n\n| Key | Value | Type | Information |\n| :-: | :-: | :-: | :-- |\n| `meta` | `"Data"` | string | Here is some meta data. |\n| `fun` | `True` | bool | And here is some more split over a couple of<br />lines. |"""
-        proper_markdown = proper_markdown.replace("<br />", "")
-        proper_markdown = proper_markdown.replace("\n", "")
+        proper_markdown = """# Configuration Parameters Reference\n\nAny information about this page goes here.\n\n| Key | Value | Type | Information |\n| :-: | :-: | :-: | :-- |\n| `meta` | `"Data"` | string | Here is some meta data. |\n| `fun` | `True` | bool | And here is some more split over a couple of<br />lines. |\n"""
+        proper_markdown = proper_markdown.replace("<br />", " ")
+        proper_markdown = proper_markdown.replace("\n", " ")
         print("\n\nActual Output:\n\n", output)
         print("\n\nExpected Output:\n\n", proper_markdown)
 
@@ -105,7 +105,7 @@ class TestMarkdown(unittest.TestCase):
         output = output.replace("<br />", "")
         output = output.replace("\n", "")
         sys.stdout = old_stdout
-        proper_markdown = """# Configuration Parameters Reference\n\nAny information about this page goes here.\n\n| Key | Value | Type | Information |\n| :-: | :-: | :-: | :-- |\n| `flat` | `"yes"` | string | This is a flat entry. |\n\n\n\n## `two`\n\n But this is a two level thing.\n\n### Member variables:\n\n| Key | Value | Type | Information |\n| :-: | :-: | :-: | :-- |\n| `entry` | `"hi"` | [\'string\', \'number\'] | These can have documentation too. |"""
+        proper_markdown = """# Configuration Parameters Reference\n\nAny information about this page goes here.\n\n| Key | Value | Type | Information |\n| :-: | :-: | :-: | :-- |\n| `flat` | `"yes"` | string | This is a flat entry. |\n\n\n\n## `two`\n\nBut this is a two level thing.\n\n### Member variables:\n\n| Key | Value | Type | Information |\n| :-: | :-: | :-: | :-- |\n| `entry` | `"hi"` | [\'string\', \'number\'] | These can have documentation too. |"""
         proper_markdown = proper_markdown.replace("<br />", "")
         proper_markdown = proper_markdown.replace("\n", "")
         print("\n\nActual Output:\n\n", output)
