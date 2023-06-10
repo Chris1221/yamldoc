@@ -24,6 +24,8 @@ class TestYAMLs(unittest.TestCase):
         self.assertEqual(entries[1].value, known_entries[1].value)
         self.assertEqual(entries[1].meta, known_entries[1].meta)
 
+        self.assertEqual(entries.__repr__(), '[YAML Entry [meta: "Data"]\n\t Meta: Here is some meta data., YAML Entry [fun: True]\n\t Meta: And here is some more split over a couple of lines.]')
+
     def test_two_level(self):
         entries = yamldoc.parse_yaml("test/yaml/two_level.yaml", char="#'", debug=False)
         self.assertEqual(len(entries), 2)
@@ -112,6 +114,26 @@ class TestMarkdown(unittest.TestCase):
         print("\n\nExpected Output:\n\n", proper_markdown)
 
         self.assertTrue(output == proper_markdown)
+
+    def test_simple_no_schema(self):
+        old_stdout = sys.stdout
+        new_stdout = io.StringIO()
+        sys.stdout = new_stdout
+
+        _ = yamldoc.main(
+            yaml_path="test/yaml/basic.yaml",
+            footer=False,
+        )
+        output = new_stdout.getvalue()
+        output = output.replace("<br />", " ")
+        output = output.replace("\n", " ")
+        sys.stdout = old_stdout
+        proper_markdown = """# Configuration Parameters Reference\n\nAny information about this page goes here.\n\n| Key | Value | Information |\n| :-: | :-: | :-: | :-- |\n| `meta` | `"Data"` | Here is some meta data. |\n| `fun` | `True` | And here is some more split over a couple of<br />lines. |\n"""
+        proper_markdown = proper_markdown.replace("<br />", " ")
+        proper_markdown = proper_markdown.replace("\n", " ")
+        print("\n\nActual Output:\n\n", output)
+        print("\n\nExpected Output:\n\n", proper_markdown)
+
 
 
 if __name__ == "__main__":
