@@ -1,12 +1,14 @@
 import textwrap
 
+
 class MetaEntry:
-    """ 
-    A container to hold a base level YAML entry plus any associated
-    hierarchical keys and values. 
     """
+    A container to hold a base level YAML entry plus any associated
+    hierarchical keys and values.
+    """
+
     def __init__(self, name, meta):
-        """ 
+        """
         Initialize the object.
 
         Arguments:
@@ -24,48 +26,45 @@ class MetaEntry:
         Returns a print representation.
         """
         if self.has_schema:
-            return f'YAML Meta Object with {len(self.entries)} entries [{self.name}] and type information.' 
+            return f"YAML Meta Object with {len(self.entries)} entries [{self.name}] and type information."
         else:
-            return f'YAML Meta Object with {len(self.entries)} entries [{self.name}]'
+            return f"YAML Meta Object with {len(self.entries)} entries [{self.name}]"
 
     def to_markdown(self, schema=False):
-        """ 
+        """
         Prints the contents of the object in markdown.
 
         Argumenets:
             schema: Print with four columns instead of three.
         """
         if schema:
-            output = f'## `{self.name}`\n\n{self.meta}\n\n'
+            output = f"## `{self.name}`\n\n{self.meta.lstrip()}\n\n"
             output += "### Member variables:\n\n"
-            
+
             output += "| Key | Value | Type | Information |\n"
             output += "| :-: | :-: | :-: | :-- |\n"
 
             for entry in self.entries:
                 output += entry.to_markdown(schema) + "\n"
-            output += "\n\n"
             return output
 
-        else: 
-            output = f'## `{self.name}`\n\n{self.meta}\n\n'
+        else:
+            output = f"## `{self.name}`\n\n{self.meta.lstrip()}\n\n"
             output += "### Member variables:\n\n"
-            
+
             output += "| Key | Value | Information |\n"
             output += "| :-: | :-: | :-- |\n"
 
             for entry in self.entries:
                 output += entry.to_markdown()
 
-            output += "\n\n"
-
             return output
 
-        
 
 class Entry:
     """
     Container for a single YAML key value pairing and associated metadata."""
+
     def __init__(self, key, value, meta):
         """
         Initialize the object
@@ -86,24 +85,24 @@ class Entry:
         Gives a print representation for the class.
         """
         if self.type is not None:
-            return f'YAML Entry [{self.key}: {self.value}]\n\t Meta: {self.meta}\n\t Type: {self.type}'
+            return f"YAML Entry [{self.key}: {self.value}]\n\t Meta: {self.meta}\n\t Type: {self.type}"
         else:
-            return f'YAML Entry [{self.key}: {self.value}]\n\t Meta: {self.meta}'
+            return f"YAML Entry [{self.key}: {self.value}]\n\t Meta: {self.meta}"
 
-    def to_markdown(self, schema = False):
+    def to_markdown(self, schema=False):
         """
         Prints the entry as markdown.
 
         Arguments:
             schema: Print with four columns instead of three.
         """
-        if schema: 
-            m = '<br />'.join(textwrap.wrap(self.meta, width = 50))
+        if schema:
+            m = "<br />".join(textwrap.wrap(self.meta, width=50))
             if self.type == None:
                 vartype = "Unknown"
             else:
                 vartype = self.type
-            return f'| `{self.key}` | `{self.value}` | {vartype} | {m} |'
+            return f"| `{self.key}` | `{self.value}` | {vartype} | {m} |"
         else:
-            m = '<br />'.join(textwrap.wrap(self.meta, width = 50))
-            return f'| `{self.key}` | `{self.value}` | {m} |'
+            m = "<br />".join(textwrap.wrap(self.meta, width=50))
+            return f"| `{self.key}` | `{self.value}` | {m} |"
