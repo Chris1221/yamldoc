@@ -56,7 +56,7 @@ class MetaEntry:
             output += "| :-: | :-: | :-- |\n"
 
             for entry in self.entries:
-                output += entry.to_markdown()
+                output += entry.to_markdown() + "\n"
 
             return output
 
