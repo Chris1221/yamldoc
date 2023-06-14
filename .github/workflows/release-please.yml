@@ -1,6 +1,2 @@
 releaseType: python
 handleGHRelease: true
-branches:
-  - branch: master
-    releaseType: python
-    handleGHRelease: true
