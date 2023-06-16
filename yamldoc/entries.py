@@ -1,4 +1,5 @@
 import textwrap
+from dataclasses import dataclass
 
 
 class MetaEntry:
@@ -20,6 +21,18 @@ class MetaEntry:
         self.isBase = True
         self.entries = []
         self.has_schema = False
+
+    def is_list(self):
+        """Returns True if all elements are list elements and False otherwise."""
+        return all([isinstance(entry, ListElement) for entry in self.entries])
+    
+    def to_list_entry(self):
+        """Converts this meta instance to a base level list entry."""
+        if self.is_list():
+            values = [entry.entry for entry in self.entries]
+
+            return Entry(self.name, values, self.meta)
+
 
     def __repr__(self):
         """
@@ -59,6 +72,11 @@ class MetaEntry:
                 output += entry.to_markdown() + "\n"
 
             return output
+
+
+@dataclass
+class ListElement:
+    entry: str
 
 
 class Entry:

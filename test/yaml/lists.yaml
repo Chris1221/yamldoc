@@ -1,0 +1,6 @@
+#' List metadata
+this_is_a_list:
+  #' Ignore me
+  - 1
+  - 2
+  - 3

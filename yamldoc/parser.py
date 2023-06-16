@@ -23,9 +23,43 @@ def parse_yaml(file_path, char="#'", debug=False):
     things = []
 
     with open(file_path) as yaml:
-        for line in [line for line in yaml.readlines() if line.rstrip()]:
-            if debug:
-                print(line.rstrip())
+        for line in [l for l in yaml.readlines() if l.rstrip()]:
+            if debug: print(line.rstrip())
+
+            if current_entry is not None:
+                if current_entry.isBase:
+
+                    # If we're back at 0 indentation, the
+                    # block is done and we need to quit.
+                    if len(line) - len(line.lstrip(' ')) == 0:
+                        # Is current_entry a list or a meta-entry?
+                        if current_entry.is_list():
+                            if debug: print("@\tAdding list entry to things.")
+                            things.append(current_entry.to_list_entry())
+                        else:
+                            if debug: print("@\tAdding meta entry to things.")
+                            things.append(current_entry)
+                        current_entry = None
+                        
+
+                    # If not, continue parsing the sub entries.
+                    # 
+                    if current_entry is not None:
+                        if line.lstrip(' ').startswith(char):
+                            meta = meta + line.lstrip().lstrip(char).rstrip()
+                        else:
+                            try:
+                                key, value = line.lstrip().rstrip().split(":", 1)
+                                current_entry.entries.append(yamldoc.entries.Entry(key, value.lstrip(' '), meta.lstrip()))
+                                if debug: print("@\tFound an entry and deposited it in meta.")
+                                meta = ""
+                            except ValueError:
+                                # If there's only one value, it's a list.
+                                # in this case, we add ths value to the 
+                                # current entry and continue.
+                                if debug: print("@\tFound a list entry.")
+                                current_entry.entries.append(yamldoc.entries.ListElement(line.lstrip().lstrip("-").lstrip().rstrip()))
+
 
             # Either we haven't started yet
             # or we've just flushed the entry.
@@ -45,6 +79,9 @@ def parse_yaml(file_path, char="#'", debug=False):
 
                         # If there is no value, this is the beginning of a
                         # base entry (i.e. there are subentries to follow)
+                        #
+                        # This could also be a simple list entry but I can't
+                        # know that until I see the next line.
                         if not value.lstrip():
                             current_entry = yamldoc.entries.MetaEntry(key, meta)
 
@@ -67,33 +104,15 @@ def parse_yaml(file_path, char="#'", debug=False):
                                 print("@\tFound an entry.")
                             meta = ""
 
-            if current_entry is not None:
-                if current_entry.isBase:
-                    # If we're back at 0 indentation, the
-                    # block is done and we need to quit.
-                    if len(line) - len(line.lstrip(" ")) == 0:
-                        things.append(current_entry)
-                        current_entry = None
-                        continue
-
-                    # If not, continue parsing the sub entries.
-                    if line.lstrip(" ").startswith(char):
-                        meta = meta + line.lstrip().lstrip(char).rstrip()
-                    else:
-                        key, value = line.lstrip().rstrip().split(":", 1)
-                        current_entry.entries.append(
-                            yamldoc.entries.Entry(key, value.lstrip(" "), meta.lstrip())
-                        )
-                        if debug:
-                            print("@\tFound an entry and deposited it in meta.")
-                        meta = ""
 
         # The file might run out
         # before the final meta
         # entry is added.
         try:
-            if isinstance(current_entry, yamldoc.entries.MetaEntry):
-                if current_entry.isBase:
+            if current_entry.isBase:
+                if current_entry.is_list():
+                    things.append(current_entry.to_list_entry())
+                else:
                     things.append(current_entry)
         except AttributeError:
             pass
@@ -168,7 +187,6 @@ def parse_schema(path_to_file, debug=False):
                 key = key_value(line)
                 value = None
 
-            # if key == "var2": breakpoint()
 
             # This is awkwardly placed but we have to deal
             # with a special case where lines
