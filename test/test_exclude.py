@@ -1,4 +1,3 @@
-import markdown as md
 import yamldoc
 
 
