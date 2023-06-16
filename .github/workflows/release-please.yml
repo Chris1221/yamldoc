@@ -1,2 +1,7 @@
+on:
+  push:
+    branches:
+      - master
+
 releaseType: python
 handleGHRelease: true
