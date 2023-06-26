@@ -1,7 +1,15 @@
+# .github/workflows/release-please.yml
+name: release-please
 on:
   push:
     branches:
       - master
-
-releaseType: python
-handleGHRelease: true
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: google-github-actions/release-please-action@v3
+        with:
+          release-type: python # Multiple release types are supported
+          default-branch: master
+          handleGHRelease: true
