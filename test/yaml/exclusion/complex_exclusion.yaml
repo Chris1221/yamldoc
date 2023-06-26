@@ -33,3 +33,7 @@ test5:
   entry2:
     k: 11
     l: 12
+  array1:
+    - 1
+    - 2
+    - 3

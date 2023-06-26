@@ -42,3 +42,12 @@ def test_complex_exclusion():
 
     assert entry5.entries[0].exclude == True, "Entry should be excluded."
     assert entry5.entries[1].exclude == False, "Entry should not be excluded."
+
+def test_nested_list():
+    yaml = yamldoc.parse_yaml(
+        "test/yaml/exclusion/nested_list.yaml", exclude_char="#'!"
+    )
+
+    assert len(yaml) == 1, "All entries should be included."
+    assert yaml[0].to_markdown(), "Should be able to print the entry."
+    

@@ -62,8 +62,13 @@ def parse_yaml(file_path, char="#'", debug=False, exclude_char="#'!", override_e
                         else:
                             try:
                                 key, value = line.lstrip().rstrip().split(":", 1)
-                                current_entry.entries.append(
-                                    yamldoc.entries.Entry(
+
+                                if not value.lstrip():
+                                    new_entry = yamldoc.entries.MetaEntry(
+                                        key, meta, char, exclude_char, override_exclude
+                                    )
+                                else:
+                                    new_entry = yamldoc.entries.Entry(
                                         key,
                                         value.lstrip(" "),
                                         meta.lstrip(),
@@ -71,7 +76,9 @@ def parse_yaml(file_path, char="#'", debug=False, exclude_char="#'!", override_e
                                         exclude_char,
                                         override_exclude
                                     )
-                                )
+
+                                current_entry.entries.append(new_entry)
+
                                 if debug:
                                     print("@\tFound an entry and deposited it in meta.")
                                 meta = ""
@@ -81,11 +88,29 @@ def parse_yaml(file_path, char="#'", debug=False, exclude_char="#'!", override_e
                                 # current entry and continue.
                                 if debug:
                                     print("@\tFound a list entry.")
-                                current_entry.entries.append(
-                                    yamldoc.entries.ListElement(
-                                        line.lstrip().lstrip("-").lstrip().rstrip()
+
+                                # Have to figure out if this is an element of 
+                                # a nested list or a new list.
+
+                                if len(current_entry.entries) != 0:
+                                    if isinstance(current_entry.entries[-1], yamldoc.entries.MetaEntry):
+                                        current_entry.entries[-1].entries.append(
+                                            yamldoc.entries.ListElement(
+                                                line.lstrip().lstrip("-").lstrip().rstrip()
+                                            )
+                                        )
+                                    else: 
+                                        current_entry.entries.append(
+                                            yamldoc.entries.ListElement(
+                                                line.lstrip().lstrip("-").lstrip().rstrip()
+                                            )
+                                        )
+                                else:
+                                    current_entry.entries.append(
+                                        yamldoc.entries.ListElement(
+                                            line.lstrip().lstrip("-").lstrip().rstrip()
+                                        )
                                     )
-                                )
 
             # Either we haven't started yet
             # or we've just flushed the entry.
@@ -141,11 +166,12 @@ def parse_yaml(file_path, char="#'", debug=False, exclude_char="#'!", override_e
         # before the final meta
         # entry is added.
         try:
-            if current_entry.isBase:
-                if current_entry.is_list():
-                    things.append(current_entry.to_list_entry())
-                else:
-                    things.append(current_entry)
+            if current_entry is not None:
+                if current_entry.isBase:
+                    if current_entry.is_list():
+                        things.append(current_entry.to_list_entry())
+                    else:
+                        things.append(current_entry)
         except AttributeError:
             pass
 

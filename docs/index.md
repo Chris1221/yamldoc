@@ -24,6 +24,24 @@ This package was designed specifically to document the possible configuration op
 
 For more details on using YAML to configure Snakemake pipelines, see [here](https://snakemake.readthedocs.io/en/stable/snakefiles/configuration.html).
 
+## Features and Supported Syntax 
+
+`yamldoc` does not support the full syntax of YAML, which is vast and complex. Instead, it supports a subset of YAML that is useful for documenting configuration files. This subset includes:
+
+| Syntax | Supported | Description |
+| --- | --- | --- |
+| `key: value` | Yes | Basic key-value pairs. Values can be any type and are not subject to coercion. (i.e. `yes` will remain `yes` in `yamldoc` output. It will not be coerced to `True` as a YAML parser would. The goal of `yamldoc` is to be **transparent**, not feature complete. |
+| `key: [value1, value2, ...]` | Yes | Arrays are understood by yamldoc if they are either listed on one line or each entry given on a new line with dashes to indicate entries. |
+| Comments | Yes | Non-`yamldoc` comments are ignored. `yamldoc` comments are indicated by a special character (default `#'`) at the beginning of the line. `yamldoc` comments can be broken over as many lines as you like, they will be added together when the markdown is constructed. |
+
+Things YAML does not support: 
+
+- Nested arrays past two levels of nesting. `yamldoc` will not parse nested arrays past two levels of nesting. [Issue #14](https://github.com/Chris1221/yamldoc/issues/14) tracks this request. 
+- Multi-line strings (unquoted or quoted scalars) indicated by `|` or `>` are not supported.
+- Lists of dictionaries are not supported.
+- Multiple documents in a single file are supported, but no special handling is done to separate them. It is assumed that each document is a separate configuration file.
+- Complex mapping keys starting with `!!` or `?` are not supported. `yamldoc` will not parse complex mappings, tags, or explicit tags. 
+
 ## Example Files
 
 For a minimal example of `yamldoc`, see the files in `/test/yaml` and `/test/schema`.
@@ -56,3 +74,15 @@ yamldoc test/yaml/basic.yaml -c "YOURCHAR"
 - `_yamldoc_description`: A description to follow the title. 
 
 These are picked out of the schema file and reported.
+
+
+`yamldoc` has support for skipping individual entries in the reported markdown. Note this is seperate from adding comments that are not meta-data, these are respected and never reported. Skipping refers to actual entries in the YAML file. To skip an entry, add the skip character (by default, `#'!`) to the beginning of the line. 
+
+```yaml
+# This is a comment, it will not be reported
+#' This entry will be included in the report 
+entry1: value1
+
+#'! This entry will be skipped
+entry2: value2
+```

@@ -76,11 +76,9 @@ class MetaEntry:
         """
         if self.has_schema:
             return (
-                f"YAML Meta Object with {len(self.entries)} entries [{self.name}] and"
-                " type information."
-            )
+                f"Meta object (n = {len(self.entries)}) with schema: {self.entries}" )
         else:
-            return f"YAML Meta Object with {len(self.entries)} entries [{self.name}]"
+            return f"Meta object (n = {len(self.entries)}) without schema: {self.entries}"
 
     def non_excluded_entries(self):
         """Returns a list of entries that are not excluded."""
@@ -99,6 +97,17 @@ class MetaEntry:
             """)
 
         return header
+    
+    def check_for_lists(self):
+        new_entries = []
+        for entry in self.entries:
+            if isinstance(entry, MetaEntry):
+                if entry.is_list():
+                    new_entries.append(entry.to_list_entry())
+                    continue
+            new_entries.append(entry)
+        
+        self.entries = new_entries
 
     def to_markdown(self, schema=False):
         """
@@ -111,7 +120,11 @@ class MetaEntry:
         # If the object is excluded, we don't want to print anything.
         if self.exclude:
             return ""
-
+        
+        # Check for any sublists that need to be converted
+        # from meta to entries
+        self.check_for_lists()
+        
         # Regardles of whether or not there are entries to print, we still want to print the
         # meta information.
         output = f"## `{self.name}`\n\n{self.meta.lstrip()}\n\n"
@@ -136,6 +149,7 @@ class MetaEntry:
 @dataclass
 class ListElement:
     entry: str
+    exclude: bool = False 
 
 
 class Entry:
