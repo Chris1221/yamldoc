@@ -1,0 +1,14 @@
+LICENSE
+README.md
+setup.py
+test/test_examples.py
+test/test_exclude.py
+yamldoc/__init__.py
+yamldoc/cli.py
+yamldoc/entries.py
+yamldoc/parser.py
+yamldoc.egg-info/PKG-INFO
+yamldoc.egg-info/SOURCES.txt
+yamldoc.egg-info/dependency_links.txt
+yamldoc.egg-info/entry_points.txt
+yamldoc.egg-info/top_level.txt

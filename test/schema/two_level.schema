@@ -12,3 +12,11 @@ properties:
                                 type: 
                                         - string
                                         - number
+        three:
+                type: object
+                properties:
+                        level_two:
+                                type: object
+                                properties:
+                                        level_three:
+                                                type: string
