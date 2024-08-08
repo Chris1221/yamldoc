@@ -50,4 +50,24 @@ def test_nested_list():
 
     assert len(yaml) == 1, "All entries should be included."
     assert yaml[0].to_markdown(), "Should be able to print the entry."
-    
+
+def test_deeper_nesting_exclusion():
+    yaml = yamldoc.parse_yaml(
+        "test/yaml/exclusion/deeper_nesting_exclusion.yaml", exclude_char="#'!"
+    )
+
+    assert len(yaml) == 3, "All entries should be included."
+
+    excluded = [entry for entry in yaml if entry.exclude]
+    assert len(excluded) == 1, "One entry should be excluded."
+
+    meta_entries = [entry for entry in yaml if hasattr(entry, "name")]
+    assert len(meta_entries) == 2, "There should be 2 meta entries."
+
+    entry1, entry2 = meta_entries
+
+    assert entry1.exclude == False, "Entry 1 should not be excluded."
+    assert entry2.exclude == False, "Entry 2 should not be excluded."
+
+    assert entry2.entries[0].exclude == True, "Entry 2's sub-entry should be excluded."
+    assert entry2.entries[1].exclude == False, "Entry 2's sub-entry should not be excluded."

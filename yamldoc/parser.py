@@ -400,6 +400,14 @@ def add_type_metadata(schema, yaml, debug=False):
                                     # there's a schema.
                                     value.has_schema = True
                                     entry.has_schema = True
+                                elif isinstance(entry, yamldoc.entries.MetaEntry):
+                                    for sub_entry in entry.entries:
+                                        if var == sub_entry.key:
+                                            if debug:
+                                                print(f"Setting type of {var}")
+                                            sub_entry.type = var_type
+                                            value.has_schema = True
+                                            sub_entry.has_schema = True
 
 
 def strip_footer(md: str) -> str:

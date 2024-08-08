@@ -110,6 +110,14 @@ class TestYAMLs(unittest.TestCase):
         self.assertEqual(entries[0].value, ["1", "2", "3"])
         self.assertTrue(entries[0].meta.strip() == "List metadata")
 
+    def test_deeper_nesting(self):
+        entries = yamldoc.parse_yaml("test/yaml/deeper_nesting.yaml", char="#'", debug=False)
+        self.assertEqual(len(entries), 3)
+        self.assertEqual(entries[0].key, "flat")
+        self.assertEqual(entries[1].entries[0].key, "entry")
+        self.assertEqual(entries[2].entries[0].key, "level_two")
+        self.assertEqual(entries[2].entries[0].entries[0].key, "level_three")
+
 class TestSchemas(unittest.TestCase):
     def test_basic(self):
         yaml = yamldoc.parse_yaml("test/yaml/basic.yaml", debug=False)
@@ -146,6 +154,18 @@ class TestSchemas(unittest.TestCase):
         self.assertTrue(schema["general"]["var2"] == "string")
         self.assertTrue(schema["general"]["var3"] == "string")
 
+    def test_deeper_nesting(self):
+        yaml = yamldoc.parse_yaml("test/yaml/deeper_nesting.yaml", debug=False)
+        schema, specials, extra = yamldoc.parser.parse_schema(
+            "test/schema/deeper_nesting.schema", debug=False
+        )
+        yamldoc.parser.add_type_metadata(schema, yaml)
+        self.assertEqual(yaml[0].type, "string")
+        self.assertEqual(yaml[1].entries[0].key, "entry")
+        self.assertEqual(yaml[2].entries[0].key, "level_two")
+        self.assertEqual(yaml[2].entries[0].entries[0].key, "level_three")
+        self.assertEqual(yaml[2].entries[0].entries[0].type, "string")
+
 class TestE2E(unittest.TestCase):
     def test_basic(self):
         output = get_output("test/yaml/basic.yaml", "test/schema/basic.schema")
@@ -167,7 +187,9 @@ class TestE2E(unittest.TestCase):
         output = get_output("test/yaml/long.yaml")
         self.assertTrue(assert_all_printed("test/yaml/long.yaml", output))
 
-    
+    def test_deeper_nesting(self):
+        output = get_output("test/yaml/deeper_nesting.yaml", "test/schema/deeper_nesting.schema")
+        self.assertTrue(assert_all_printed("test/yaml/deeper_nesting.yaml", output))
 
 
 class TestMarkdown(unittest.TestCase):
@@ -235,6 +257,30 @@ class TestMarkdown(unittest.TestCase):
         print("\n\nActual Output:\n\n", output)
         print("\n\nExpected Output:\n\n", proper_markdown)
 
+        self.assertTrue(output == proper_markdown)
+
+    def test_deeper_nesting(self):
+        old_stdout = sys.stdout
+        new_stdout = io.StringIO()
+        sys.stdout = new_stdout
+
+        _ = yamldoc.main(
+            yaml_path="test/yaml/deeper_nesting.yaml",
+            schema_path="test/schema/deeper_nesting.schema",
+            footer=False,
+        )
+        output = new_stdout.getvalue()
+        # Lines are split by <br /> in the actual output but we don't care about where
+        output = output.replace("<br />", "")
+        output = output.replace("\n", "")
+        sys.stdout = old_stdout
+        proper_markdown = """# Configuration Parameters Reference\n\nAny information about this page goes here.\n\n| Key | Value | Type | Information |\n| :-: | :-: | :-: | :-- |\n| `flat` | `"yes"` | string | This is a flat entry. |\n\n\n\n## `two`\n\nBut this is a two level thing.\n\n### Member variables:\n\n| Key | Value | Type | Information |\n| :-: | :-: | :-: | :-- |\n| `entry` | `"hi"` | [\'string\', \'number\'] | These can have documentation too. |\n\n\n\n## `three`\n\nThis is a three level thing.\n\n### Member variables:\n\n| Key | Value | Type | Information |\n| :-: | :-: | :-: | :-- |\n| `level_two` |  | object | This is the second level. |\n\n\n\n#### `level_two`\n\nThis is the second level.\n\n##### Member variables:\n\n| Key | Value | Type | Information |\n| :-: | :-: | :-: | :-- |\n| `level_three` | `"hello"` | string | This is the third level. |"""
+        proper_markdown = proper_markdown.replace("<br />", "")
+        proper_markdown = proper_markdown.replace("\n", "")
+        print("\n\nActual Output:\n\n", output)
+        print("\n\nExpected Output:\n\n", proper_markdown)
+
+        self.assertTrue(output == proper_markdown)
 
 
 if __name__ == "__main__":
