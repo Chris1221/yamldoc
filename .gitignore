@@ -5,3 +5,4 @@
 .vscode/
 .pixi/
 *.egg-info/
+.coverage
