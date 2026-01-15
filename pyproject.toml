@@ -1,0 +1,50 @@
+[project]
+name = "yamldoc"
+version = "0.2.0"
+description = "Documentation engine for YAML."
+authors = [
+    {name = "Chris Cole", email = "chris.c.1221@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.scripts]
+yamldoc = "yamldoc:cli"
+
+[build-system]
+requires = ["setuptools>=45", "wheel", "setuptools_scm[toml]>=6.2"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["yamldoc"]
+
+[tool.pixi.project]
+channels = ["conda-forge"]
+platforms = ["linux-64", "osx-64", "osx-arm64", "win-64"]
+
+[tool.pixi.pypi-dependencies]
+yamldoc = { path = ".", editable = true }
+
+[tool.pixi.dependencies]
+python = ">=3.8"
+pip = "*"
+
+[tool.pixi.feature.dev.dependencies]
+pytest = "*"
+coverage = "*"
+pyyaml = "*"
+build = "*"
+
+[tool.pixi.feature.dev.tasks]
+test = "python test/test_examples.py"
+test-pytest = "pytest test"
+test-coverage = "coverage run -m pytest test"
+
+[tool.pixi.environments]
+default = ["dev"]

@@ -1,34 +1,35 @@
 version: 2.1
 
-orbs:
-  python: circleci/python@0.2.1
-  
 branches:
   only:
     - master
 
 jobs:
   build-and-test:
-    executor: python/default
+    docker:
+      - image: cimg/base:stable
     steps:
       - checkout
       - run:
-          command: | 
-            pip install .
-            pip install pyyaml
-          name: Install
+          name: Install Pixi
+          command: |
+            curl -fsSL https://pixi.sh/install.sh | bash
+            echo 'export PATH=$HOME/.pixi/bin:$PATH' >> $BASH_ENV
       - run:
-          command: python test/test_examples.py
-          name: Test 
+          name: Install dependencies
+          command: pixi install
       - run:
-          command: pip install pytest coverage codecov
-          name: Install test
+          name: Test
+          command: pixi run test
       - run:
-          command: coverage run -m pytest test
-          name: Run coverage test.
+          name: Install codecov
+          command: pixi run pip install codecov
       - run:
-          command: python -m codecov
-
+          name: Run coverage test
+          command: pixi run test-coverage
+      - run:
+          name: Upload coverage
+          command: pixi run python -m codecov
 
 workflows:
   main:
