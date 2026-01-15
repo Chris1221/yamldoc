@@ -2,7 +2,7 @@
 
 ## Documentation Engine for YAML
 
-[![PyPI version](https://badge.fury.io/py/yamldoc.svg)](https://badge.fury.io/py/yamldoc) [![CircleCI](https://circleci.com/gh/Chris1221/yamldoc.svg?style=svg&circle-token=114ff93a4850a6cf03289d1b7a9aaf4af351afc9)](https://app.circleci.com/pipelines/github/Chris1221/yamldoc?branch=master) [![codecov](https://codecov.io/gh/Chris1221/yamldoc/branch/master/graph/badge.svg?token=OpQhpILdh3)](https://codecov.io/gh/Chris1221/yamldoc) [![Downloads](https://pepy.tech/badge/yamldoc)](https://pepy.tech/project/yamldoc)
+[![PyPI version](https://badge.fury.io/py/yamldoc.svg)](https://badge.fury.io/py/yamldoc) [![CircleCI](https://dl.circleci.com/status-badge/img/gh/Chris1221/yamldoc/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/Chris1221/yamldoc/tree/master) [![codecov](https://codecov.io/gh/Chris1221/yamldoc/branch/master/graph/badge.svg?token=OpQhpILdh3)](https://codecov.io/gh/Chris1221/yamldoc) [![Downloads](https://pepy.tech/badge/yamldoc)](https://pepy.tech/project/yamldoc)
 
 This package converts a YAML file into markdown, formatting values and associated metadata in a `doxygen`-like way. To get started, check out the [documentation](http://chrisbcole.me/yamldoc/) and [tutorials](http://chrisbcole.me/yamldoc/tutorial/).
 
