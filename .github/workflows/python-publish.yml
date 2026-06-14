@@ -31,6 +31,5 @@ jobs:
     - name: Build package
       run: pixi run python -m build
 
-    # Pypi key needed, not yet set up
-    # - name: Publish package to PyPI
-    #   uses: pypa/gh-action-pypi-publish@release/v1
+    - name: Publish package to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
