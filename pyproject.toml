@@ -18,7 +18,7 @@ classifiers = [
 yamldoc = "yamldoc:cli"
 
 [build-system]
-requires = ["setuptools>=45", "wheel"]
+requires = ["setuptools>=61", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
