@@ -237,5 +237,11 @@ class TestMarkdown(unittest.TestCase):
 
 
 
+class TestPackage(unittest.TestCase):
+    def test_version_is_set(self):
+        self.assertNotEqual(yamldoc.__version__, "unknown")
+        self.assertRegex(yamldoc.__version__, r"^\d+\.\d+\.\d+")
+
+
 if __name__ == "__main__":
     unittest.main()

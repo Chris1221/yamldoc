@@ -5,6 +5,8 @@ environments:
     - url: https://conda.anaconda.org/conda-forge/
     indexes:
     - https://pypi.org/simple
+    options:
+      pypi-prerelease-mode: if-necessary-or-explicit
     packages:
       linux-64:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/_libgcc_mutex-0.1-conda_forge.tar.bz2
@@ -900,9 +902,8 @@ packages:
 - pypi: ./
   name: yamldoc
   version: 0.2.0
-  sha256: 3112ab705ba975443d164940c057ba39cb506e3b59a2f65399cef6cd83daef7f
+  sha256: 73943540b9d8156a2e6f350aa4e467284d1eff878b0b85b71b9bc4077a02d702
   requires_python: '>=3.8'
-  editable: true
 - conda: https://conda.anaconda.org/conda-forge/linux-64/zstd-1.5.7-hb78ec9c_6.conda
   sha256: 68f0206ca6e98fea941e5717cec780ed2873ffabc0e1ed34428c061e2c6268c7
   md5: 4a13eeac0b5c8e5b8ab496e6c4ddd829
