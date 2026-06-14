@@ -4,6 +4,18 @@
 
 Fixed a weird untested bug for reading from meta-data file.
 
+## [0.3.0](https://github.com/Chris1221/yamldoc/compare/v0.2.0...v0.3.0) (2026-06-14)
+
+
+### Features
+
+* upgrade to pixi ([#19](https://github.com/Chris1221/yamldoc/issues/19)) ([cd1db32](https://github.com/Chris1221/yamldoc/commit/cd1db329a1d0b9d573208f2a7a7226216a621b7f))
+
+
+### Bug Fixes
+
+* remove setuptools_scm to fix pip install from source ([#22](https://github.com/Chris1221/yamldoc/issues/22)) ([9082c42](https://github.com/Chris1221/yamldoc/commit/9082c42199beff9e910b82c9afa4ec9a70a5684d))
+
 ## [0.2.0](https://github.com/Chris1221/yamldoc/compare/0.1.6...v0.2.0) (2023-06-26)
 
 
