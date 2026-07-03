@@ -1,13 +1,9 @@
-# This workflow will upload a Python Package to PyPI when a release is created by release-please
+# This workflow uploads a Python package to PyPI. It is called by release-please.yml
+# when a new release is created.
 name: Publish to PyPI
 
 on:
-  push:
-    tags:
-      - 'v*'
-
-permissions:
-  contents: read
+  workflow_call:
 
 jobs:
   pypi-publish:
@@ -16,7 +12,7 @@ jobs:
       name: pypi
       url: https://pypi.org/p/yamldoc
     permissions:
-      id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
+      id-token: write
 
     steps:
     - uses: actions/checkout@v4
