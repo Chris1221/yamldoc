@@ -4,6 +4,13 @@
 
 Fixed a weird untested bug for reading from meta-data file.
 
+## [0.3.2](https://github.com/Chris1221/yamldoc/compare/v0.3.1...v0.3.2) (2026-07-03)
+
+
+### Bug Fixes
+
+* trigger release-please ([7090fd3](https://github.com/Chris1221/yamldoc/commit/7090fd3c2bd76b8e7eac6eea05f583ea8474a4ab))
+
 ## [0.3.1](https://github.com/Chris1221/yamldoc/compare/v0.3.0...v0.3.1) (2026-07-03)
 
 
