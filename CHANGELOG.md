@@ -4,6 +4,13 @@
 
 Fixed a weird untested bug for reading from meta-data file.
 
+## [0.3.1](https://github.com/Chris1221/yamldoc/compare/v0.3.0...v0.3.1) (2026-07-03)
+
+
+### Bug Fixes
+
+* require setuptools&gt;=61 for PEP 621 pyproject.toml support ([cc307d1](https://github.com/Chris1221/yamldoc/commit/cc307d1a68ba9cc2dca5e9a15bf42a8c109efee6))
+
 ## [0.3.0](https://github.com/Chris1221/yamldoc/compare/v0.2.0...v0.3.0) (2026-06-14)
 
 
