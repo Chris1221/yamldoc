@@ -1,0 +1,16 @@
+#'! This flat entry should be excluded.
+flat: "yes"
+
+#' This is a two level thing.
+two:
+        #' These can have documentation too.
+        entry: "hi"
+
+#' This is a three level thing.
+three:
+        #'! This level is excluded.
+        level_two:
+                #' This is the third level.
+                level_three: "hello"
+        #' This level is included.
+        other_entry: "included"

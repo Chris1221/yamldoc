@@ -69,7 +69,7 @@ pixi run yamldoc test/yaml/basic.yaml -e "#!!" --override-exclude
 
 **[yamldoc/entries.py](yamldoc/entries.py)**: Data structures
 - `Entry`: Single key-value pair with metadata
-- `MetaEntry`: Base-level entry with hierarchical sub-entries (the `isBase` attribute distinguishes these)
+- `MetaEntry`: Base-level entry with hierarchical sub-entries (the `isBase` attribute distinguishes these). Has `to_table_row()` for inline table rendering and `to_markdown(depth=1)` for full section rendering with depth-aware headings.
 - `ListElement`: Individual list item
 - Each class has `to_markdown()` methods for output generation
 
@@ -82,10 +82,10 @@ The parser is stateful and works as follows:
 1. **Line-by-line processing**: Reads YAML file sequentially, tracking indentation levels
 2. **Metadata accumulation**: Lines starting with the metadata character (`#'`) accumulate until a key-value pair is found
 3. **Entry creation**: When a key-value pair is encountered, creates an `Entry` or `MetaEntry` with accumulated metadata
-4. **Hierarchical handling**: `MetaEntry` objects (when `key:` has no value) collect sub-entries until indentation returns to level 0
+4. **Hierarchical handling**: `MetaEntry` objects (when `key:` has no value) collect sub-entries. A `sub_stack` tracks nested `MetaEntry` scopes by indentation level, routing new entries to the correct parent at any depth.
 5. **List detection**: `MetaEntry` objects with only `ListElement` children are converted to `Entry` objects with array values
 
-**Important**: The parser tracks state via `current_entry` and flushes entries when returning to base indentation level.
+**Important**: The parser tracks state via `current_entry` (top-level MetaEntry) and `sub_stack` (nested MetaEntries). Both are flushed when indentation returns to level 0.
 
 ### Schema Integration
 
@@ -106,6 +106,7 @@ Entries can be excluded from documentation:
 
 The parser intentionally supports a YAML subset, NOT full YAML spec:
 - Maximum 2 levels of nesting for arrays
+- Arbitrary nesting depth for objects (keys with sub-keys), but markdown output uses heading levels `##`/`###` at depth 1 and `####`/`#####` at depth 2; beyond depth 2 the heading levels would exceed `######`
 - No multi-line strings (`|` or `>`)
 - No lists of dictionaries
 - No complex mapping keys or tags (`!!`, `?`)
