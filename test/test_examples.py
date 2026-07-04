@@ -237,6 +237,14 @@ class TestMarkdown(unittest.TestCase):
 
 
 
+class TestComments(unittest.TestCase):
+    def test_ordinary_comment_without_colon(self):
+        # Regression test for issue #26
+        output = get_output("test/yaml/ordinary_comments.yaml")
+        self.assertIn("hello world", output)
+        self.assertIn("1", output)
+
+
 class TestPackage(unittest.TestCase):
     def test_version_is_set(self):
         self.assertNotEqual(yamldoc.__version__, "unknown")

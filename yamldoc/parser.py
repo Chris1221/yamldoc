@@ -125,6 +125,8 @@ def parse_yaml(file_path, char="#'", debug=False, exclude_char="#'!", override_e
                     current_entry = None
                     if line.startswith(char):
                         meta = meta + line.rstrip()
+                    elif line.startswith("#"):
+                        pass
                     else:
                         key, value = line.rstrip().split(":", 1)
 
