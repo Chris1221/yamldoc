@@ -128,7 +128,6 @@ class MetaEntry:
         self.check_for_lists()
 
         section_level = depth * 2
-        members_level = depth * 2 + 1
 
         # CommonMark caps heading levels at h6; fall back to bold text beyond that
         if section_level <= 6:
@@ -136,10 +135,9 @@ class MetaEntry:
         else:
             section_header = f"**`{self.name}`**"
 
-        if members_level <= 6:
-            members_header = f"{'#' * members_level} Member variables:"
-        else:
-            members_header = "**Member variables:**"
+        # Always use bold for the members label — avoids burning heading levels and
+        # keeps the visual hierarchy flat regardless of nesting depth.
+        members_header = "**Member variables:**"
 
         meta_text = self.meta.lstrip()
         output = f"{section_header}\n\n"
