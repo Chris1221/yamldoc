@@ -545,11 +545,13 @@ def main(
             print("| Key | Value | Type | Information |")
             print("| :-: | :-: | :-: | :-- |")
 
+        has_flat = any(not v.isBase for v in yaml)
         for value in yaml:
             if not value.isBase:
                 print(value.to_markdown(schema=True))
 
-        # print("\n\n")
+        if has_flat and any(v.isBase for v in yaml):
+            print()
 
         for value in yaml:
             if value.isBase:
@@ -573,9 +575,13 @@ def main(
             print("| Key | Value | Information |")
             print("| :-: | :-: | :-- |")
 
+        has_flat = any(not v.isBase for v in yaml)
         for value in yaml:
             if not value.isBase:
                 print(value.to_markdown())
+
+        if has_flat and any(v.isBase for v in yaml):
+            print()
 
         for value in yaml:
             if value.isBase:

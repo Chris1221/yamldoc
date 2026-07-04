@@ -87,17 +87,9 @@ class MetaEntry:
 
     def table_header(self, schema=False):
         if schema:
-            header = textwrap.dedent("""
-            | Key | Value | Type | Information |
-            | :-: | :-: | :-: | :-- |
-            """)
+            return "| Key | Value | Type | Information |\n| :-: | :-: | :-: | :-- |\n"
         else:
-            header = textwrap.dedent("""
-            | Key | Value | Information |
-            | :-: | :-: | :-- |
-            """)
-
-        return header
+            return "| Key | Value | Information |\n| :-: | :-: | :-- |\n"
     
     def check_for_lists(self):
         new_entries = []
@@ -149,7 +141,10 @@ class MetaEntry:
         else:
             members_header = "**Member variables:**"
 
-        output = f"{section_header}\n\n{self.meta.lstrip()}\n\n"
+        meta_text = self.meta.lstrip()
+        output = f"{section_header}\n\n"
+        if meta_text:
+            output += f"{meta_text}\n\n"
 
         entries_to_print = self.non_excluded_entries()
         if len(entries_to_print) == 0:
@@ -168,7 +163,7 @@ class MetaEntry:
                 output += entry.to_markdown(schema) + "\n"
 
         for entry in nested_meta_entries:
-            output += "\n\n\n" + entry.to_markdown(schema, depth=depth + 1)
+            output += "\n" + entry.to_markdown(schema, depth=depth + 1)
 
         return output
 
