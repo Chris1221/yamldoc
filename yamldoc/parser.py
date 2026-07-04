@@ -61,7 +61,7 @@ def parse_yaml(file_path, char="#'", debug=False, exclude_char="#'!", override_e
                             meta = meta + line.lstrip().rstrip()
                         else:
                             try:
-                                key, value = line.lstrip().rstrip().split(":", 1)
+                                key, value = line.lstrip().lstrip("-").lstrip().rstrip().split(":", 1)
 
                                 if not value.lstrip():
                                     new_entry = yamldoc.entries.MetaEntry(

@@ -153,9 +153,9 @@ class ListElement:
 
     def to_markdown(self, schema=False):
         if schema:
-            return f"|  | `{self.entry}` | Unknown |  |"
+            return f"| `{self.entry}` |  | Unknown |  |"
         else:
-            return f"|  | `{self.entry}` |  |"
+            return f"| `{self.entry}` |  |  |"
 
 
 class Entry:
