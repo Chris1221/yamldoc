@@ -4,6 +4,20 @@
 
 Fixed a weird untested bug for reading from meta-data file.
 
+## [0.4.0](https://github.com/Chris1221/yamldoc/compare/v0.3.8...v0.4.0) (2026-07-04)
+
+
+### Features
+
+* support nested objects ([#18](https://github.com/Chris1221/yamldoc/issues/18)) ([fdccf8a](https://github.com/Chris1221/yamldoc/commit/fdccf8a277c316f9c951c347fd484a0d06d1a4cb))
+
+
+### Bug Fixes
+
+* render ListElement in mixed lists with empty key column ([f7b908d](https://github.com/Chris1221/yamldoc/commit/f7b908dd4f7786d3f3f180446cbf22553f891b0f))
+* skip ListElement objects when rendering mixed MetaEntry to avoid crash ([01f4ec9](https://github.com/Chris1221/yamldoc/commit/01f4ec94f2c5ca73726042adead581b32fdc81c1))
+* strip list dash prefix from sub-entry keys and render ListElement as key with no value ([ec06ce5](https://github.com/Chris1221/yamldoc/commit/ec06ce5b6177c8bea78fd600a058f1469e785ec7))
+
 ## [0.3.8](https://github.com/Chris1221/yamldoc/compare/v0.3.7...v0.3.8) (2026-07-04)
 
 
