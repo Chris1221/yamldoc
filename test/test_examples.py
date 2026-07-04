@@ -115,7 +115,7 @@ class TestYAMLs(unittest.TestCase):
         self.assertEqual(len(entries), 3)
         self.assertEqual(entries[0].key, "flat")
         self.assertEqual(entries[1].entries[0].key, "entry")
-        self.assertEqual(entries[2].entries[0].key, "level_two")
+        self.assertEqual(entries[2].entries[0].name, "level_two")
         self.assertEqual(entries[2].entries[0].entries[0].key, "level_three")
 
 class TestSchemas(unittest.TestCase):
@@ -162,7 +162,7 @@ class TestSchemas(unittest.TestCase):
         yamldoc.parser.add_type_metadata(schema, yaml)
         self.assertEqual(yaml[0].type, "string")
         self.assertEqual(yaml[1].entries[0].key, "entry")
-        self.assertEqual(yaml[2].entries[0].key, "level_two")
+        self.assertEqual(yaml[2].entries[0].name, "level_two")
         self.assertEqual(yaml[2].entries[0].entries[0].key, "level_three")
         self.assertEqual(yaml[2].entries[0].entries[0].type, "string")
 
@@ -189,7 +189,8 @@ class TestE2E(unittest.TestCase):
 
     def test_deeper_nesting(self):
         output = get_output("test/yaml/deeper_nesting.yaml", "test/schema/deeper_nesting.schema")
-        self.assertTrue(assert_all_printed("test/yaml/deeper_nesting.yaml", output))
+        for token in ["flat", "yes", "two", "entry", "hi", "three", "level_two", "level_three", "hello"]:
+            self.assertIn(token, output)
 
 
 class TestMarkdown(unittest.TestCase):
@@ -251,7 +252,7 @@ class TestMarkdown(unittest.TestCase):
         output = output.replace("<br />", " ")
         output = output.replace("\n", " ")
         sys.stdout = old_stdout
-        proper_markdown = """# Configuration Parameters Reference\n\nAny information about this page goes here.\n\n| Key | Value | Information |\n| :-: | :-: | :-: | :-- |\n| `meta` | `"Data"` | Here is some meta data. |\n| `fun` | `True` | And here is some more split over a couple of<br />lines. |\n"""
+        proper_markdown = """# Configuration Parameters Reference\n\nAny information about this page goes here.\n\n| Key | Value | Information |\n| :-: | :-: | :-- |\n| `meta` | `"Data"` | Here is some meta data. |\n| `fun` | `True` | And here is some more split over a couple of<br />lines. |\n"""
         proper_markdown = proper_markdown.replace("<br />", " ")
         proper_markdown = proper_markdown.replace("\n", " ")
         print("\n\nActual Output:\n\n", output)

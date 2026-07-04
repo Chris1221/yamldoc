@@ -51,6 +51,7 @@ class MetaEntry:
         self.entries = []
         self.has_schema = False
 
+        self.type = None
         self.meta, self.exclude = sanitize_meta(meta, char, exclude_char, override_exclude)
 
     def is_list(self):
@@ -109,39 +110,54 @@ class MetaEntry:
         
         self.entries = new_entries
 
-    def to_markdown(self, schema=False):
+    def to_table_row(self, schema=False):
+        """Render this MetaEntry as a single table row for display inside a parent table."""
+        if self.exclude:
+            return ""
+        m = "<br />".join(textwrap.wrap(self.meta.lstrip(), width=50))
+        if schema:
+            vartype = self.type if self.type is not None else "object"
+            return f"| `{self.name}` |  | {vartype} | {m} |"
+        else:
+            return f"| `{self.name}` |  | {m} |"
+
+    def to_markdown(self, schema=False, depth=1):
         """
         Prints the contents of the object in markdown.
 
-        Argumenets:
+        Arguments:
             schema: Print with four columns instead of three.
+            depth: Nesting depth; controls heading levels (1=##/###, 2=####/#####).
         """
 
-        # If the object is excluded, we don't want to print anything.
         if self.exclude:
             return ""
-        
-        # Check for any sublists that need to be converted
-        # from meta to entries
-        self.check_for_lists()
-        
-        # Regardles of whether or not there are entries to print, we still want to print the
-        # meta information.
-        output = f"## `{self.name}`\n\n{self.meta.lstrip()}\n\n"
 
-        # This is an early exit if there are no entries to print.
+        self.check_for_lists()
+
+        h_section = "#" * (depth * 2)
+        h_members = "#" * (depth * 2 + 1)
+
+        output = f"{h_section} `{self.name}`\n\n{self.meta.lstrip()}\n\n"
+
         entries_to_print = self.non_excluded_entries()
         if len(entries_to_print) == 0:
             output += "No member variables.\n\n"
-
             return output
 
-        # So we have entries to print. Let's print them.
-        output += "### Member variables:\n\n"
+        output += f"{h_members} Member variables:\n\n"
         output += self.table_header(schema)
 
+        nested_meta_entries = []
         for entry in entries_to_print:
-            output += entry.to_markdown(schema) + "\n"
+            if isinstance(entry, MetaEntry):
+                output += entry.to_table_row(schema) + "\n"
+                nested_meta_entries.append(entry)
+            else:
+                output += entry.to_markdown(schema) + "\n"
+
+        for entry in nested_meta_entries:
+            output += "\n\n\n" + entry.to_markdown(schema, depth=depth + 1)
 
         return output
 

@@ -30,6 +30,7 @@ def parse_yaml(file_path, char="#'", debug=False, exclude_char="#'!", override_e
     current_entry = None
     meta = ""
     things = []
+    sub_stack = []  # [(MetaEntry, indent_level), ...] tracks nested scope within current_entry
 
     with open(file_path) as yaml:
         for line in [l for l in yaml.readlines() if l.rstrip()]:
@@ -51,6 +52,7 @@ def parse_yaml(file_path, char="#'", debug=False, exclude_char="#'!", override_e
                                 print("@\tAdding meta entry to things.")
                             things.append(current_entry)
                         current_entry = None
+                        sub_stack = []
 
                     # If not, continue parsing the sub entries.
                     #
@@ -60,6 +62,15 @@ def parse_yaml(file_path, char="#'", debug=False, exclude_char="#'!", override_e
                         ).startswith(exclude_char):
                             meta = meta + line.lstrip().rstrip()
                         else:
+                            indent = len(line) - len(line.lstrip(" "))
+
+                            # Pop stack frames that are at or deeper than current indent
+                            while sub_stack and sub_stack[-1][1] >= indent:
+                                sub_stack.pop()
+
+                            # The active target is the innermost in-scope MetaEntry
+                            target = sub_stack[-1][0] if sub_stack else current_entry
+
                             try:
                                 key, value = line.lstrip().lstrip("-").lstrip().rstrip().split(":", 1)
 
@@ -67,6 +78,8 @@ def parse_yaml(file_path, char="#'", debug=False, exclude_char="#'!", override_e
                                     new_entry = yamldoc.entries.MetaEntry(
                                         key, meta, char, exclude_char, override_exclude
                                     )
+                                    target.entries.append(new_entry)
+                                    sub_stack.append((new_entry, indent))
                                 else:
                                     new_entry = yamldoc.entries.Entry(
                                         key,
@@ -76,37 +89,31 @@ def parse_yaml(file_path, char="#'", debug=False, exclude_char="#'!", override_e
                                         exclude_char,
                                         override_exclude
                                     )
-
-                                current_entry.entries.append(new_entry)
+                                    target.entries.append(new_entry)
 
                                 if debug:
                                     print("@\tFound an entry and deposited it in meta.")
                                 meta = ""
                             except ValueError:
-                                # If there's only one value, it's a list.
-                                # in this case, we add ths value to the
-                                # current entry and continue.
+                                # If there's only one value, it's a list element.
                                 if debug:
                                     print("@\tFound a list entry.")
 
-                                # Have to figure out if this is an element of 
-                                # a nested list or a new list.
-
-                                if len(current_entry.entries) != 0:
-                                    if isinstance(current_entry.entries[-1], yamldoc.entries.MetaEntry):
-                                        current_entry.entries[-1].entries.append(
+                                if len(target.entries) != 0:
+                                    if isinstance(target.entries[-1], yamldoc.entries.MetaEntry):
+                                        target.entries[-1].entries.append(
                                             yamldoc.entries.ListElement(
                                                 line.lstrip().lstrip("-").lstrip().rstrip()
                                             )
                                         )
-                                    else: 
-                                        current_entry.entries.append(
+                                    else:
+                                        target.entries.append(
                                             yamldoc.entries.ListElement(
                                                 line.lstrip().lstrip("-").lstrip().rstrip()
                                             )
                                         )
                                 else:
-                                    current_entry.entries.append(
+                                    target.entries.append(
                                         yamldoc.entries.ListElement(
                                             line.lstrip().lstrip("-").lstrip().rstrip()
                                         )
@@ -360,6 +367,18 @@ def parse_schema(path_to_file, debug=False):
         return current, specials, extras
 
 
+def _find_meta_entry(entries, name):
+    """Recursively find a MetaEntry with the given name in a list of entries."""
+    for entry in entries:
+        if isinstance(entry, yamldoc.entries.MetaEntry):
+            if entry.name == name:
+                return entry
+            result = _find_meta_entry(entry.entries, name)
+            if result is not None:
+                return result
+    return None
+
+
 def add_type_metadata(schema, yaml, debug=False):
     """
     Modified a list of yaml entries in place to add type information
@@ -373,43 +392,27 @@ def add_type_metadata(schema, yaml, debug=False):
     Returns:
         Nothing.
     """
-    # Loop over each value of the schema
     for name, variables in schema.items():
-        # Find the corresponding entry in the YAML.
-
-        # Special case: if the name is base in the schema
-        # these are top level variables
-        # which need to be dealt with seperately.
         if name == "base":
-            # Look for top level entries
             for var, var_type in variables.items():
                 for value in yaml:
                     if not value.isBase:
                         if var == value.key:
                             value.type = var_type
         else:
-            for value in yaml:
-                if value.isBase:
-                    if name == value.name:
-                        for var, var_type in variables.items():
-                            for entry in value.entries:
-                                if var == entry.key:
-                                    if debug:
-                                        print(f"Setting type of {var}")
-                                    entry.type = var_type
-                                    # If we find at least one
-                                    # then we can say that
-                                    # there's a schema.
-                                    value.has_schema = True
-                                    entry.has_schema = True
-                                elif isinstance(entry, yamldoc.entries.MetaEntry):
-                                    for sub_entry in entry.entries:
-                                        if var == sub_entry.key:
-                                            if debug:
-                                                print(f"Setting type of {var}")
-                                            sub_entry.type = var_type
-                                            value.has_schema = True
-                                            sub_entry.has_schema = True
+            # Search the full YAML tree for a MetaEntry with this name
+            meta_entry = _find_meta_entry(yaml, name)
+            if meta_entry is None:
+                continue
+            for var, var_type in variables.items():
+                for entry in meta_entry.entries:
+                    entry_key = entry.name if isinstance(entry, yamldoc.entries.MetaEntry) else entry.key
+                    if var == entry_key:
+                        if debug:
+                            print(f"Setting type of {var}")
+                        entry.type = var_type
+                        meta_entry.has_schema = True
+                        entry.has_schema = True
 
 
 def strip_footer(md: str) -> str:
