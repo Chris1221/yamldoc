@@ -14,6 +14,8 @@ pip install yamldoc
 
 This will install the python package, which contains a command line interface `yamldoc`. To see usage instructions, invoke the `--help` flag:
 
+> **Note:** pip >= 23.0 is required. If you see the package install as `UNKNOWN`, upgrade pip first: `pip install --upgrade pip`
+
 ```sh
 yamldoc -h
 ```
