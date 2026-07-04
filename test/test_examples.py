@@ -284,6 +284,20 @@ class TestMarkdown(unittest.TestCase):
         self.assertTrue(output == proper_markdown)
 
 
+    def test_heading_levels_cap_at_h6(self):
+        inner = yamldoc.entries.MetaEntry("leaf", "#' leaf doc", "#'")
+        inner.entries.append(yamldoc.entries.Entry("k", "v", "#' doc", "#'"))
+        outer = yamldoc.entries.MetaEntry("deep", "#' deep doc", "#'")
+        outer.entries.append(inner)
+
+        md3 = outer.to_markdown(depth=3)
+        self.assertIn("###### `deep`", md3)
+        self.assertIn("**Member variables:**", md3)
+
+        md4 = outer.to_markdown(depth=4)
+        self.assertIn("**`deep`**", md4)
+
+
 class TestEdgeCases(unittest.TestCase):
     def test_ordinary_comment_without_colon(self):
         # Regression test for issue #26

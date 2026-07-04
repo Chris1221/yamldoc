@@ -135,17 +135,28 @@ class MetaEntry:
 
         self.check_for_lists()
 
-        h_section = "#" * (depth * 2)
-        h_members = "#" * (depth * 2 + 1)
+        section_level = depth * 2
+        members_level = depth * 2 + 1
 
-        output = f"{h_section} `{self.name}`\n\n{self.meta.lstrip()}\n\n"
+        # CommonMark caps heading levels at h6; fall back to bold text beyond that
+        if section_level <= 6:
+            section_header = f"{'#' * section_level} `{self.name}`"
+        else:
+            section_header = f"**`{self.name}`**"
+
+        if members_level <= 6:
+            members_header = f"{'#' * members_level} Member variables:"
+        else:
+            members_header = "**Member variables:**"
+
+        output = f"{section_header}\n\n{self.meta.lstrip()}\n\n"
 
         entries_to_print = self.non_excluded_entries()
         if len(entries_to_print) == 0:
             output += "No member variables.\n\n"
             return output
 
-        output += f"{h_members} Member variables:\n\n"
+        output += f"{members_header}\n\n"
         output += self.table_header(schema)
 
         nested_meta_entries = []
