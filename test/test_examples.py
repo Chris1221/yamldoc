@@ -251,6 +251,16 @@ class TestEdgeCases(unittest.TestCase):
         self.assertIn("123", output)
         self.assertIn("`y`", output)
 
+    def test_mixed_list_key_has_no_dash_prefix(self):
+        output = get_output("test/yaml/mixed_list.yaml")
+        self.assertIn("| `x` |", output)
+        self.assertNotIn("| `- x` |", output)
+
+    def test_list_element_to_markdown(self):
+        el = yamldoc.entries.ListElement("foo")
+        self.assertEqual(el.to_markdown(), "| `foo` |  |  |")
+        self.assertEqual(el.to_markdown(schema=True), "| `foo` |  | Unknown |  |")
+
 
 class TestPackage(unittest.TestCase):
     def test_version_is_set(self):
