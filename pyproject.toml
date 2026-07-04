@@ -1,6 +1,6 @@
 [project]
 name = "yamldoc"
-version = "0.3.3"
+version = "0.3.4"
 description = "Documentation engine for YAML."
 authors = [
     {name = "Chris Cole", email = "chris.c.1221@gmail.com"}
