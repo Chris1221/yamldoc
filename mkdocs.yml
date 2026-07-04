@@ -1,0 +1,28 @@
+site_name: yamldoc
+site_description: Documentation Engine for YAML
+repo_url: https://github.com/Chris1221/yamldoc
+repo_name: Chris1221/yamldoc
+
+theme:
+  name: material
+  palette:
+    primary: teal
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            show_source: false
+
+nav:
+  - Home: index.md
+  - Tutorials:
+      - Basic Usage: tutorial.md
+      - With Schema: tutorial_1.md
+      - Hierarchical YAML: hier_tutorial.md
+  - Sphinx Integration: sphinx.md
+  - API Reference:
+      - Entries: api/classes.md
+      - Parser: api/main.md

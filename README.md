@@ -1,6 +1,6 @@
 ## Documentation Engine for YAML
 
-[![PyPI version](https://badge.fury.io/py/yamldoc.svg)](https://badge.fury.io/py/yamldoc) [![codecov](https://codecov.io/gh/Chris1221/yamldoc/branch/main/graph/badge.svg?token=OpQhpILdh3)](https://codecov.io/gh/Chris1221/yamldoc) [![Downloads](https://pepy.tech/badge/yamldoc)](https://pepy.tech/project/yamldoc)
+[![PyPI version](https://img.shields.io/pypi/v/yamldoc.svg)](https://pypi.org/project/yamldoc/) [![codecov](https://codecov.io/gh/Chris1221/yamldoc/branch/main/graph/badge.svg?token=OpQhpILdh3)](https://codecov.io/gh/Chris1221/yamldoc) [![Downloads](https://pepy.tech/badge/yamldoc)](https://pepy.tech/project/yamldoc)
 
 This package converts a YAML file into markdown, formatting values and associated metadata in a `doxygen`-like way. To get started, check out the [documentation](http://chrisbcole.me/yamldoc/) and [tutorials](http://chrisbcole.me/yamldoc/tutorial/).
 
