@@ -127,7 +127,7 @@ class MetaEntry:
 
         self.check_for_lists()
 
-        section_level = depth * 2
+        section_level = depth + 1  # depth=1 → ##, depth=2 → ###, …, depth=5 → ######
 
         # CommonMark caps heading levels at h6; fall back to bold text beyond that
         if section_level <= 6:

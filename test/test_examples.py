@@ -275,7 +275,7 @@ class TestMarkdown(unittest.TestCase):
         output = output.replace("<br />", "")
         output = output.replace("\n", "")
         sys.stdout = old_stdout
-        proper_markdown = """# Configuration Parameters Reference\n\nAny information about this page goes here.\n\n| Key | Value | Type | Information |\n| :-: | :-: | :-: | :-- |\n| `flat` | `"yes"` | string | This is a flat entry. |\n\n\n\n## `two`\n\nBut this is a two level thing.\n\n**Member variables:**\n\n| Key | Value | Type | Information |\n| :-: | :-: | :-: | :-- |\n| `entry` | `"hi"` | [\'string\', \'number\'] | These can have documentation too. |\n\n\n\n## `three`\n\nThis is a three level thing.\n\n**Member variables:**\n\n| Key | Value | Type | Information |\n| :-: | :-: | :-: | :-- |\n| `level_two` |  | object | This is the second level. |\n\n\n\n#### `level_two`\n\nThis is the second level.\n\n**Member variables:**\n\n| Key | Value | Type | Information |\n| :-: | :-: | :-: | :-- |\n| `level_three` | `"hello"` | string | This is the third level. |"""
+        proper_markdown = """# Configuration Parameters Reference\n\nAny information about this page goes here.\n\n| Key | Value | Type | Information |\n| :-: | :-: | :-: | :-- |\n| `flat` | `"yes"` | string | This is a flat entry. |\n\n\n\n## `two`\n\nBut this is a two level thing.\n\n**Member variables:**\n\n| Key | Value | Type | Information |\n| :-: | :-: | :-: | :-- |\n| `entry` | `"hi"` | [\'string\', \'number\'] | These can have documentation too. |\n\n\n\n## `three`\n\nThis is a three level thing.\n\n**Member variables:**\n\n| Key | Value | Type | Information |\n| :-: | :-: | :-: | :-- |\n| `level_two` |  | object | This is the second level. |\n\n\n\n### `level_two`\n\nThis is the second level.\n\n**Member variables:**\n\n| Key | Value | Type | Information |\n| :-: | :-: | :-: | :-- |\n| `level_three` | `"hello"` | string | This is the third level. |"""
         proper_markdown = proper_markdown.replace("<br />", "")
         proper_markdown = proper_markdown.replace("\n", "")
         print("\n\nActual Output:\n\n", output)
@@ -290,12 +290,12 @@ class TestMarkdown(unittest.TestCase):
         outer = yamldoc.entries.MetaEntry("deep", "#' deep doc", "#'")
         outer.entries.append(inner)
 
-        md3 = outer.to_markdown(depth=3)
-        self.assertIn("###### `deep`", md3)
-        self.assertIn("**Member variables:**", md3)
-
-        md4 = outer.to_markdown(depth=4)
-        self.assertIn("**`deep`**", md4)
+        # depth=1 → ##, depth=2 → ###, …, depth=5 → ###### (h6 max)
+        self.assertIn("## `deep`", outer.to_markdown(depth=1))
+        self.assertIn("### `deep`", outer.to_markdown(depth=2))
+        self.assertIn("###### `deep`", outer.to_markdown(depth=5))
+        # depth=6+ overflows h6 → falls back to bold
+        self.assertIn("**`deep`**", outer.to_markdown(depth=6))
 
 
 class TestSpacing(unittest.TestCase):
@@ -318,7 +318,7 @@ class TestSpacing(unittest.TestCase):
 
     def test_single_blank_line_before_nested_section(self):
         output = self._output("test/yaml/deeper_nesting.yaml", "test/schema/deeper_nesting.schema")
-        self.assertIn("This is the second level. |\n\n#### `level_two`", output)
+        self.assertIn("This is the second level. |\n\n### `level_two`", output)
 
     def test_section_without_meta_no_extra_blank_line(self):
         output = self._output("test/yaml/long.yaml")
