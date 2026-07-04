@@ -248,6 +248,8 @@ class TestEdgeCases(unittest.TestCase):
         # Regression test for issue #27
         output = get_output("test/yaml/mixed_list.yaml")
         self.assertIn("a_list_of_mixed_dict_and_str", output)
+        self.assertIn("123", output)
+        self.assertIn("`y`", output)
 
 
 class TestPackage(unittest.TestCase):
