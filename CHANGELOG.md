@@ -4,6 +4,18 @@
 
 Fixed a weird untested bug for reading from meta-data file.
 
+## [0.3.8](https://github.com/Chris1221/yamldoc/compare/v0.3.7...v0.3.8) (2026-07-04)
+
+
+### Bug Fixes
+
+* skip ordinary comments in parser to avoid crash on lines without colon ([4a38301](https://github.com/Chris1221/yamldoc/commit/4a3830159c443d2828a2913f2569d7906e2ebfc7))
+
+
+### Documentation
+
+* note minimum pip version requirement in README ([228ba00](https://github.com/Chris1221/yamldoc/commit/228ba008057f7f37fb227c8e0d3c84b429cb0959))
+
 ## [0.3.7](https://github.com/Chris1221/yamldoc/compare/v0.3.6...v0.3.7) (2026-07-04)
 
 
