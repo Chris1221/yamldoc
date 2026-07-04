@@ -237,12 +237,17 @@ class TestMarkdown(unittest.TestCase):
 
 
 
-class TestComments(unittest.TestCase):
+class TestEdgeCases(unittest.TestCase):
     def test_ordinary_comment_without_colon(self):
         # Regression test for issue #26
         output = get_output("test/yaml/ordinary_comments.yaml")
         self.assertIn("hello world", output)
         self.assertIn("1", output)
+
+    def test_mixed_list_does_not_crash(self):
+        # Regression test for issue #27
+        output = get_output("test/yaml/mixed_list.yaml")
+        self.assertIn("a_list_of_mixed_dict_and_str", output)
 
 
 class TestPackage(unittest.TestCase):

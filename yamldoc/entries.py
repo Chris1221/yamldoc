@@ -82,7 +82,7 @@ class MetaEntry:
 
     def non_excluded_entries(self):
         """Returns a list of entries that are not excluded."""
-        return [entry for entry in self.entries if not entry.exclude]
+        return [entry for entry in self.entries if not entry.exclude and not isinstance(entry, ListElement)]
 
     def table_header(self, schema=False):
         if schema:

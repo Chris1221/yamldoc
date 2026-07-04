@@ -1,0 +1,6 @@
+#' hello world
+a: 1
+
+a_list_of_mixed_dict_and_str:
+  - x: 123
+  - y
