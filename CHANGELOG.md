@@ -4,6 +4,13 @@
 
 Fixed a weird untested bug for reading from meta-data file.
 
+## [0.4.1](https://github.com/Chris1221/yamldoc/compare/v0.4.0...v0.4.1) (2026-07-04)
+
+
+### Bug Fixes
+
+* restore docs deploy and fix PyPI badge ([#37](https://github.com/Chris1221/yamldoc/issues/37)) ([e58ddc9](https://github.com/Chris1221/yamldoc/commit/e58ddc90fd01c66d8430d5d6c3d0d273f0fbcba2))
+
 ## [0.4.0](https://github.com/Chris1221/yamldoc/compare/v0.3.8...v0.4.0) (2026-07-04)
 
 
